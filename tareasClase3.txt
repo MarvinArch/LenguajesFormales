@@ -1,1 +1,20 @@
 Tareas Clase 3
+
+ejercicio #
+conjunto de todas las cadenas formadas por uno o mas ceros seguidos del mismo numero de unos
+        
+        {0^i1^j | i =j }
+
+ejercicio #
+Lenguaje que siempre forma un par de parentesis
+        L={(^n)^n | n ≥ 0}
+
+
+
+ejercicio #
+    Considere el Lenguaje 
+    L{a^ib^jc^k | i=j o j=k}
+        
+        S1 -> AB
+        A->aAb | ab
+        B->Bc |c

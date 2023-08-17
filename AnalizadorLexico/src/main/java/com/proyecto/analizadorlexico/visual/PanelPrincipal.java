@@ -4,6 +4,10 @@
  */
 package com.proyecto.analizadorlexico.visual;
 
+import java.util.List;
+import javax.swing.JTextArea;
+import javax.swing.event.CaretEvent;
+import javax.swing.event.CaretListener;
 import others.NumerarLineas;
 
 /**
@@ -18,11 +22,45 @@ public class PanelPrincipal extends javax.swing.JPanel {
     NumerarLineas numeros;
     public PanelPrincipal() {
         initComponents();
-        numeros= new NumerarLineas(jTextArea1);
+        numeros = new NumerarLineas(jTextArea1);
         jScrollPane1.setViewportView(jTextArea1);
         jScrollPane1.setRowHeaderView(numeros);
         this.setToolTipText("sin titulo");
+        this.jTextArea1.addCaretListener(new CaretListener() {
+            public void caretUpdate(CaretEvent e) {
+                JTextArea editArea = (JTextArea) e.getSource();
+                int linea = 1;
+                int columna = 1;
+
+                try {
+                    int caretpos = editArea.getCaretPosition();
+                    linea = editArea.getLineOfOffset(caretpos);
+                    columna = caretpos - editArea.getLineStartOffset(linea);
+
+                    // Ya que las líneas las cuenta desde la 0
+                    linea += 1;
+                } catch (Exception ex) {
+                }
+                modificarLabelConteo(linea, columna);
+            }
+        });
     }
+    
+    public void modificarLabelConteo(int fila, int columna){
+        this.labelConteo.setText("Linea "+ fila+ " Columna "+ columna);
+    }
+    
+    public void cambiarTextoArea(List<String> agregar){
+        jTextArea1.setText("");
+        for (String linea : agregar) {
+            jTextArea1.append(linea);
+            jTextArea1.append("\n");
+        }
+    }
+    
+    public String devolverTexto(){
+        return jTextArea1.getText();
+    } 
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -37,6 +75,10 @@ public class PanelPrincipal extends javax.swing.JPanel {
         jTextArea1 = new javax.swing.JTextArea();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTextArea2 = new javax.swing.JTextArea();
+        labelConteo = new javax.swing.JLabel();
+        jSeparator1 = new javax.swing.JSeparator();
+
+        setBackground(new java.awt.Color(204, 204, 204));
 
         jTextArea1.setColumns(20);
         jTextArea1.setRows(5);
@@ -47,28 +89,39 @@ public class PanelPrincipal extends javax.swing.JPanel {
         });
         jScrollPane1.setViewportView(jTextArea1);
 
+        jTextArea2.setEditable(false);
         jTextArea2.setColumns(20);
         jTextArea2.setRows(5);
         jScrollPane2.setViewportView(jTextArea2);
+
+        labelConteo.setText("Linea 0 Columna 0");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap(21, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 1043, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1))
-                .addGap(14, 14, 14))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jSeparator1)
+                        .addGap(18, 18, 18)
+                        .addComponent(labelConteo, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1040, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2))
+                .addGap(17, 17, 17))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(17, 17, 17)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 355, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 258, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(labelConteo, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 244, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -82,7 +135,9 @@ public class PanelPrincipal extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JSeparator jSeparator1;
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextArea jTextArea2;
+    private javax.swing.JLabel labelConteo;
     // End of variables declaration//GEN-END:variables
 }

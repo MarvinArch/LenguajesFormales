@@ -12,9 +12,14 @@ import java.awt.MouseInfo;
 import java.awt.Shape;
 import java.awt.geom.RoundRectangle2D;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import javax.swing.JDesktopPane;
+import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
+import others.CargarArchivo;
 
 /**
  *
@@ -29,7 +34,9 @@ public class VentanaInicial extends javax.swing.JFrame {
     private int x ;
     private int y ;
     private String ubicacion;
+    ArrayList<PanelPrincipal> panel;
     public VentanaInicial() {
+        panel= new ArrayList<>();
         this.setUndecorated(true);
         initComponents();
         Shape forma = new RoundRectangle2D.Double(0, 0, this.getBounds().width, this.getBounds().height, 30, 30);
@@ -39,15 +46,13 @@ public class VentanaInicial extends javax.swing.JFrame {
         this.ubicacion = ruta.replace("target/classes/", "");
         imagenCierre(ubicacion);
         imagenMini(ubicacion);
-        imagenMenu(ubicacion);
         labelTitulo.setText("Sin Titulo - Analizador Arch");
-        JTabbedPane tab = new JTabbedPane();
-        
-        tab.setBounds(3, 70, 1080,650);
+        tab.setBounds(3, 100, 1080,700);
         this.add(tab);
-        PanelPrincipal panel = new PanelPrincipal();
-        tab.add(panel);
-        tab.setTitleAt(0, "sin titulo");
+        this.panel.add(new PanelPrincipal());
+        tab.add(panel.get(0));
+        tab.setTitleAt(0, "Sin Titulo");
+        labelTitulo.setText("Sin Titulo");
     }
     
     public void imagenCierre(String direccion){
@@ -64,15 +69,12 @@ public class VentanaInicial extends javax.swing.JFrame {
         labelMini.setText("");
     }
     
-    public void imagenMenu(String direccion){
-        ImageIcon image = new ImageIcon(direccion+"src/main/java/com/proyecto/analizadorlexico/Resource/menu.png");
-        Icon icon = new ImageIcon(image.getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT));
-        labelMenu.setIcon(icon);
-        labelMenu.setText("");
-        layeredPaneMenu.setBounds(5, 50, 100, 100);
-        this.add(layeredPaneMenu);
-        layeredPaneMenu.setVisible(false);
+    public void crearPanel(){
+        this.panel.add(new PanelPrincipal());
+        tab.add(panel.get(panel.size()-1));
     }
+    
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -87,11 +89,14 @@ public class VentanaInicial extends javax.swing.JFrame {
         labelCierre = new javax.swing.JLabel();
         labelMini = new javax.swing.JLabel();
         labelTitulo = new javax.swing.JLabel();
-        labelMenu = new javax.swing.JLabel();
-        layeredPaneMenu = new javax.swing.JLayeredPane();
-        jLabel1 = new javax.swing.JLabel();
+        buttonCargar = new javax.swing.JButton();
+        buttonPestaña = new javax.swing.JButton();
+        ButtonCerrar = new javax.swing.JButton();
+        tab = new javax.swing.JTabbedPane();
+        buttonAnalizar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setBackground(new java.awt.Color(153, 153, 153));
         setResizable(false);
 
         PanelSuperior.setBackground(new java.awt.Color(204, 204, 204));
@@ -134,29 +139,12 @@ public class VentanaInicial extends javax.swing.JFrame {
 
         labelTitulo.setText("jLabel1");
 
-        labelMenu.setText("jLabel1");
-        labelMenu.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                labelMenuFocusLost(evt);
-            }
-        });
-        labelMenu.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                labelMenuMouseExited(evt);
-            }
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                labelMenuMousePressed(evt);
-            }
-        });
-
         javax.swing.GroupLayout PanelSuperiorLayout = new javax.swing.GroupLayout(PanelSuperior);
         PanelSuperior.setLayout(PanelSuperiorLayout);
         PanelSuperiorLayout.setHorizontalGroup(
             PanelSuperiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PanelSuperiorLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(labelMenu)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 433, Short.MAX_VALUE)
+                .addContainerGap(481, Short.MAX_VALUE)
                 .addComponent(labelTitulo)
                 .addGap(464, 464, 464)
                 .addComponent(labelMini)
@@ -171,48 +159,43 @@ public class VentanaInicial extends javax.swing.JFrame {
                 .addGroup(PanelSuperiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(labelCierre)
                     .addComponent(labelMini)
-                    .addComponent(labelTitulo)
-                    .addComponent(labelMenu))
+                    .addComponent(labelTitulo))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        layeredPaneMenu.setBackground(new java.awt.Color(204, 204, 204));
-        layeredPaneMenu.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        layeredPaneMenu.setOpaque(true);
-        layeredPaneMenu.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                layeredPaneMenuMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                layeredPaneMenuMouseExited(evt);
+        buttonCargar.setText("Abrir");
+        buttonCargar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                buttonCargarMouseClicked(evt);
             }
         });
 
-        jLabel1.setBackground(new java.awt.Color(153, 51, 255));
-        jLabel1.setText("jLabel1");
-        jLabel1.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-                jLabel1FocusGained(evt);
+        buttonPestaña.setText("Nueva Pestaña");
+        buttonPestaña.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                buttonPestañaMouseClicked(evt);
             }
         });
 
-        layeredPaneMenu.setLayer(jLabel1, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        ButtonCerrar.setText("Cerra Pestaña Actual");
+        ButtonCerrar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                ButtonCerrarMouseClicked(evt);
+            }
+        });
 
-        javax.swing.GroupLayout layeredPaneMenuLayout = new javax.swing.GroupLayout(layeredPaneMenu);
-        layeredPaneMenu.setLayout(layeredPaneMenuLayout);
-        layeredPaneMenuLayout.setHorizontalGroup(
-            layeredPaneMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layeredPaneMenuLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-        );
-        layeredPaneMenuLayout.setVerticalGroup(
-            layeredPaneMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layeredPaneMenuLayout.createSequentialGroup()
-                .addComponent(jLabel1)
-                .addGap(0, 81, Short.MAX_VALUE))
-        );
+        tab.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                tabStateChanged(evt);
+            }
+        });
+
+        buttonAnalizar.setText("Analizar");
+        buttonAnalizar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                buttonAnalizarMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -220,16 +203,32 @@ public class VentanaInicial extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(PanelSuperior, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(layeredPaneMenu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(90, 90, 90)
+                .addComponent(buttonCargar)
+                .addGap(26, 26, 26)
+                .addComponent(buttonPestaña)
+                .addGap(26, 26, 26)
+                .addComponent(ButtonCerrar)
+                .addGap(35, 35, 35)
+                .addComponent(buttonAnalizar)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(tab, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(PanelSuperior, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(layeredPaneMenu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 579, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(buttonCargar)
+                    .addComponent(buttonPestaña)
+                    .addComponent(ButtonCerrar)
+                    .addComponent(buttonAnalizar))
+                .addGap(18, 18, 18)
+                .addComponent(tab, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 608, Short.MAX_VALUE))
         );
 
         pack();
@@ -239,7 +238,7 @@ public class VentanaInicial extends javax.swing.JFrame {
         // TODO add your handling code here:
         int x =evt.getX();
         int y =evt.getY();
-        layeredPaneMenu.setVisible(false);
+        //layeredPaneMenu.setVisible(false);
 
     }//GEN-LAST:event_PanelSuperiorMousePressed
 
@@ -284,39 +283,50 @@ public class VentanaInicial extends javax.swing.JFrame {
         this.setExtendedState(ICONIFIED);
     }//GEN-LAST:event_labelMiniMousePressed
 
-    private void labelMenuMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_labelMenuMousePressed
+    private void buttonCargarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_buttonCargarMouseClicked
         // TODO add your handling code here:
-        if(layeredPaneMenu.isVisible()){
-            layeredPaneMenu.setVisible(false);
+        int apuntador=0;
+        CargarArchivo arch= new CargarArchivo();
+        List<String> texto =arch.cargarMiArchivo(this);
+        int restul=  JOptionPane.showConfirmDialog(this, "Desea Abrir en una nueva Ventana");
+        if (restul == 0) {
+            crearPanel(); 
+            apuntador=panel.size()-1;
         }else{
-            layeredPaneMenu.setVisible(true);
+            apuntador=tab.getSelectedIndex();
         }
-    }//GEN-LAST:event_labelMenuMousePressed
+            tab.setTitleAt(apuntador, arch.devolverTitulo());
+            this.panel.get(apuntador).cambiarTextoArea(texto);
+            tab.setSelectedIndex(apuntador);
+            labelTitulo.setText(arch.devolverTitulo());
+    }//GEN-LAST:event_buttonCargarMouseClicked
 
-    private void labelMenuFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_labelMenuFocusLost
-        // TODO add your handling code here:
-        layeredPaneMenu.setVisible(false);
-    }//GEN-LAST:event_labelMenuFocusLost
+    private void buttonPestañaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_buttonPestañaMouseClicked
+        crearPanel();
+        tab.setTitleAt(panel.size()-1, "Sin Titulo "+ panel.size());
+        tab.setSelectedIndex(panel.size()-1);
+        labelTitulo.setText("Sin Titulo "+ panel.size());
+    }//GEN-LAST:event_buttonPestañaMouseClicked
 
-    private void jLabel1FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jLabel1FocusGained
-        // TODO add your handling code here:
-       
-    }//GEN-LAST:event_jLabel1FocusGained
+    private void ButtonCerrarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ButtonCerrarMouseClicked
+        int pestaña = tab.getSelectedIndex()==0 ? 0:tab.getSelectedIndex() ;
+        tab.remove(pestaña);
+        panel.remove(pestaña);
+        
+    }//GEN-LAST:event_ButtonCerrarMouseClicked
 
-    private void labelMenuMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_labelMenuMouseExited
-        // TODO add your handling code here:
-        //layeredPaneMenu.setVisible(false);
-    }//GEN-LAST:event_labelMenuMouseExited
+    private void tabStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_tabStateChanged
+        if (tab.getSelectedIndex()!=-1) {
+            labelTitulo.setText(tab.getTitleAt(tab.getSelectedIndex()));
+        }else{
+            labelTitulo.setText("");
+        }
+        
+    }//GEN-LAST:event_tabStateChanged
 
-    private void layeredPaneMenuMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_layeredPaneMenuMouseEntered
-        // TODO add your handling code here:
-        layeredPaneMenu.setVisible(true);
-    }//GEN-LAST:event_layeredPaneMenuMouseEntered
-
-    private void layeredPaneMenuMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_layeredPaneMenuMouseExited
-        // TODO add your handling code here:
-        layeredPaneMenu.setVisible(false);
-    }//GEN-LAST:event_layeredPaneMenuMouseExited
+    private void buttonAnalizarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_buttonAnalizarMouseClicked
+        System.out.println(panel.get(tab.getSelectedIndex()).devolverTexto());
+    }//GEN-LAST:event_buttonAnalizarMouseClicked
 
     /**
      * @param args the command line arguments
@@ -354,12 +364,14 @@ public class VentanaInicial extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton ButtonCerrar;
     private javax.swing.JPanel PanelSuperior;
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JButton buttonAnalizar;
+    private javax.swing.JButton buttonCargar;
+    private javax.swing.JButton buttonPestaña;
     private javax.swing.JLabel labelCierre;
-    private javax.swing.JLabel labelMenu;
     private javax.swing.JLabel labelMini;
     private javax.swing.JLabel labelTitulo;
-    private javax.swing.JLayeredPane layeredPaneMenu;
+    private javax.swing.JTabbedPane tab;
     // End of variables declaration//GEN-END:variables
 }

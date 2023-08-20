@@ -6,6 +6,7 @@ package com.proyecto.analizadorlexico.visual;
 
 
 import com.proyecto.analizadorlexico.AnalizadorLexico;
+import com.proyecto.analizadorlexico.others.AnalizadorLetras;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.MouseInfo;
@@ -19,7 +20,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JDesktopPane;
 import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
-import others.CargarArchivo;
+import com.proyecto.analizadorlexico.others.CargarArchivo;
 
 /**
  *
@@ -325,7 +326,9 @@ public class VentanaInicial extends javax.swing.JFrame {
     }//GEN-LAST:event_tabStateChanged
 
     private void buttonAnalizarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_buttonAnalizarMouseClicked
-        System.out.println(panel.get(tab.getSelectedIndex()).devolverTexto());
+        AnalizadorLetras ana = new AnalizadorLetras(panel.get(tab.getSelectedIndex()).devolverTexto());
+        ana.analizar();
+        ana.imprimiLista();
     }//GEN-LAST:event_buttonAnalizarMouseClicked
 
     /**

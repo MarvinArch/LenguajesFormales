@@ -8,7 +8,7 @@ import java.util.List;
 import javax.swing.JTextArea;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
-import others.NumerarLineas;
+import com.proyecto.analizadorlexico.others.NumerarLineas;
 
 /**
  *

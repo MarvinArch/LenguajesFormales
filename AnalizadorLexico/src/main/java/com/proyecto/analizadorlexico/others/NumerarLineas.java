@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package others;
+package com.proyecto.analizadorlexico.others;
 import java.awt.*;
 import java.beans.*;
 import java.util.HashMap;

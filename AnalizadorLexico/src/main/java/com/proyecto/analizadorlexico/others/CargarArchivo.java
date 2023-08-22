@@ -28,6 +28,7 @@ public class CargarArchivo extends JFileChooser{
         this.setFileFilter(imgFilter);
         int result = this.showOpenDialog(parent);
         if (result != JFileChooser.CANCEL_OPTION) {
+            texto.add("aceptado");
             try{
                 String linea;
                 File fileName = this.getSelectedFile();
@@ -40,7 +41,10 @@ public class CargarArchivo extends JFileChooser{
                 System.out.println(e);
             }
             
+        }else{
+            texto.add("Cancelado");
         }
+        
         return texto;
     }
     
@@ -60,5 +64,10 @@ public class CargarArchivo extends JFileChooser{
         
         return newTitle;
     }
+
+    public String getTitulo() {
+        return titulo;
+    }
+    
     
 }

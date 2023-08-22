@@ -17,9 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
-import javax.swing.JDesktopPane;
 import javax.swing.JOptionPane;
-import javax.swing.JTabbedPane;
 import com.proyecto.analizadorlexico.others.CargarArchivo;
 
 /**
@@ -47,7 +45,6 @@ public class VentanaInicial extends javax.swing.JFrame {
         this.ubicacion = ruta.replace("target/classes/", "");
         imagenCierre(ubicacion);
         imagenMini(ubicacion);
-        labelTitulo.setText("Sin Titulo - Analizador Arch");
         tab.setBounds(3, 100, 1080,700);
         this.add(tab);
         this.panel.add(new PanelPrincipal());
@@ -95,6 +92,7 @@ public class VentanaInicial extends javax.swing.JFrame {
         ButtonCerrar = new javax.swing.JButton();
         tab = new javax.swing.JTabbedPane();
         buttonAnalizar = new javax.swing.JButton();
+        buttonInfo = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(153, 153, 153));
@@ -198,20 +196,30 @@ public class VentanaInicial extends javax.swing.JFrame {
             }
         });
 
+        buttonInfo.setText("Ver Informe");
+        buttonInfo.setEnabled(false);
+        buttonInfo.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                buttonInfoMouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(PanelSuperior, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
-                .addGap(90, 90, 90)
-                .addComponent(buttonCargar)
-                .addGap(26, 26, 26)
-                .addComponent(buttonPestaña)
-                .addGap(26, 26, 26)
+                .addGap(84, 84, 84)
+                .addComponent(buttonCargar, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(buttonPestaña, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(ButtonCerrar)
-                .addGap(35, 35, 35)
-                .addComponent(buttonAnalizar)
+                .addGap(18, 18, 18)
+                .addComponent(buttonAnalizar, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(buttonInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addComponent(tab, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -226,7 +234,8 @@ public class VentanaInicial extends javax.swing.JFrame {
                     .addComponent(buttonCargar)
                     .addComponent(buttonPestaña)
                     .addComponent(ButtonCerrar)
-                    .addComponent(buttonAnalizar))
+                    .addComponent(buttonAnalizar)
+                    .addComponent(buttonInfo))
                 .addGap(18, 18, 18)
                 .addComponent(tab, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 608, Short.MAX_VALUE))
@@ -286,20 +295,27 @@ public class VentanaInicial extends javax.swing.JFrame {
 
     private void buttonCargarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_buttonCargarMouseClicked
         // TODO add your handling code here:
-        int apuntador=0;
-        CargarArchivo arch= new CargarArchivo();
-        List<String> texto =arch.cargarMiArchivo(this);
-        int restul=  JOptionPane.showConfirmDialog(this, "Desea Abrir en una nueva Ventana");
-        if (restul == 0) {
-            crearPanel(); 
-            apuntador=panel.size()-1;
-        }else{
-            apuntador=tab.getSelectedIndex();
-        }
+        int apuntador = 0;
+        CargarArchivo arch = new CargarArchivo();
+        List<String> texto = arch.cargarMiArchivo(this);
+        if (texto.get(0).equalsIgnoreCase("aceptado")) {
+            texto.remove(0);
+            int restul = JOptionPane.showConfirmDialog(this, "Desea Abrir en una nueva Ventana");
+            if (restul == 0) {
+                crearPanel();
+                apuntador = panel.size() - 1;
+            } else {
+                apuntador = tab.getSelectedIndex();
+            }
             tab.setTitleAt(apuntador, arch.devolverTitulo());
             this.panel.get(apuntador).cambiarTextoArea(texto);
             tab.setSelectedIndex(apuntador);
             labelTitulo.setText(arch.devolverTitulo());
+        }else{
+            texto.remove(0);
+        }
+        
+        
     }//GEN-LAST:event_buttonCargarMouseClicked
 
     private void buttonPestañaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_buttonPestañaMouseClicked
@@ -327,9 +343,21 @@ public class VentanaInicial extends javax.swing.JFrame {
 
     private void buttonAnalizarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_buttonAnalizarMouseClicked
         AnalizadorLetras ana = new AnalizadorLetras(panel.get(tab.getSelectedIndex()).devolverTexto());
-        ana.analizar();
-        ana.imprimiLista();
+        boolean errores=ana.analizar() ;
+        if (errores==false) {
+            buttonInfo.setEnabled(true);
+            panel.get(tab.getSelectedIndex()).remplaceText(ana.getToken());
+        }else{
+            buttonInfo.setEnabled(false);
+            List<String> lista = new ArrayList<>();
+            lista.add(ana.getErrores().get(0).toString());
+            this.panel.get(tab.getSelectedIndex()).cambiarTextoReporte(lista );
+        }
     }//GEN-LAST:event_buttonAnalizarMouseClicked
+
+    private void buttonInfoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_buttonInfoMouseClicked
+        
+    }//GEN-LAST:event_buttonInfoMouseClicked
 
     /**
      * @param args the command line arguments
@@ -371,6 +399,7 @@ public class VentanaInicial extends javax.swing.JFrame {
     private javax.swing.JPanel PanelSuperior;
     private javax.swing.JButton buttonAnalizar;
     private javax.swing.JButton buttonCargar;
+    private javax.swing.JButton buttonInfo;
     private javax.swing.JButton buttonPestaña;
     private javax.swing.JLabel labelCierre;
     private javax.swing.JLabel labelMini;

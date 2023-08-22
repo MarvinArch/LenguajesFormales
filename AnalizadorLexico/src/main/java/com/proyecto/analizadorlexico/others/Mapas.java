@@ -42,6 +42,11 @@ public final class Mapas {
         for (int i = 0; i < reservadasLista.length; i++) {
             reservadas.put(reservadasLista[i], "Reservada");
         }
+        reservadas.put("True", "Booleano");
+        reservadas.put("False", "Booleano");
+        reservadas.put("and", "y");
+        reservadas.put("or", "o");
+        reservadas.put("not", "neggacion");
     }
     
     private void llenarOtros(){
@@ -61,7 +66,7 @@ public final class Mapas {
     private void llenarComparacion(){
         comparacion= new HashMap<>();
         comparacion.put("==", "Igualar");
-        comparacion.put("!=", "direrente");
+        comparacion.put("!=", "diferente");
         comparacion.put(">", "Mayor que");
         comparacion.put("<", "Menor que");
         comparacion.put(">=", "Mayor o Igual que");

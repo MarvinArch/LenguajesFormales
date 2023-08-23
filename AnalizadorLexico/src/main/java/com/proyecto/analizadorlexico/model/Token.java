@@ -20,8 +20,37 @@ public class Token {
         this.token = token;
         this.lexema = lexema;
         this.grupo=grupo;
+        fijarPatron();
     }
-
+    
+    private void fijarPatron(){
+        char espe=40;
+        String[] patrones= {"(a-zA-z|1-9|_)*", "(1-9)+", "(1-9)+(.)(1-9)+", "(#)(a-zA-Z|1-9|)*","(\")(a-zA-Z|1-9|)*(\")"};
+        if (this.token.equals("Identificador")) {
+            this.patron=patrones[0];
+        }else if(this.token.equals("Entero")){
+            this.patron=patrones[1];
+        }else if(this.token.equals("Decimal")){
+            this.patron=patrones[2];
+        }else if(this.token.equals("Comentario")){
+            this.patron=patrones[3];
+        }else if(this.token.equals("Cadena")){
+            this.patron=patrones[4];
+        }else{
+            this.patron="("+this.lexema+")";
+        }
+        
+        if (this.lexema.equals("True") || this.lexema.equals("False")) {
+            this.token="Boolenas";
+            this.grupo="Constante";
+        }
+        if (this.lexema.equals("and") || this.lexema.equals("or") || this.lexema.equals("not")) {
+            this.grupo="Logicos";
+        }
+        if (this.token.equals("Asignacion")) {
+            this.grupo="Asignacion";
+        }
+    }
     public int getColumna() {
         return columna;
     }

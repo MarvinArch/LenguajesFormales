@@ -46,7 +46,7 @@ public final class Mapas {
         reservadas.put("False", "Booleano");
         reservadas.put("and", "y");
         reservadas.put("or", "o");
-        reservadas.put("not", "neggacion");
+        reservadas.put("not", "negacion");
     }
     
     private void llenarOtros(){

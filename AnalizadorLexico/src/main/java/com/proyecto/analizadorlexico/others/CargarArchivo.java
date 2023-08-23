@@ -20,6 +20,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 public class CargarArchivo extends JFileChooser{
     FileNameExtensionFilter imgFilter = new FileNameExtensionFilter("Archivos", "txt", "py"); 
     String titulo = "sin titulo";
+    String direccion="";
     
     
     public List<String> cargarMiArchivo(Component parent) {
@@ -33,6 +34,7 @@ public class CargarArchivo extends JFileChooser{
                 String linea;
                 File fileName = this.getSelectedFile();
                 titulo=fileName.getAbsolutePath();
+                direccion=fileName.getAbsolutePath();
                 FileReader fr = new FileReader (fileName);
                 br = new BufferedReader(fr);
                 while((linea=br.readLine())!=null) texto.add(linea);
@@ -63,6 +65,10 @@ public class CargarArchivo extends JFileChooser{
         }
         
         return newTitle;
+    }
+
+    public String getDireccion() {
+        return direccion;
     }
 
     public String getTitulo() {

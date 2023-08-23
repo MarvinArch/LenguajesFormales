@@ -29,11 +29,13 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Component id="PanelSuperior" max="32767" attributes="0"/>
           <Group type="102" alignment="0" attributes="0">
-              <EmptySpace min="-2" pref="84" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
               <Component id="buttonCargar" min="-2" pref="140" max="-2" attributes="0"/>
               <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Component id="buttonGuardar" min="-2" pref="139" max="-2" attributes="0"/>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
               <Component id="buttonPestaña" min="-2" pref="140" max="-2" attributes="0"/>
-              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
               <Component id="ButtonCerrar" min="-2" max="-2" attributes="0"/>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Component id="buttonAnalizar" min="-2" pref="140" max="-2" attributes="0"/>
@@ -58,6 +60,7 @@
                   <Component id="ButtonCerrar" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="buttonAnalizar" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="buttonInfo" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="buttonGuardar" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Component id="tab" min="-2" pref="100" max="-2" attributes="0"/>
@@ -179,10 +182,19 @@
       </Properties>
       <Events>
         <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="buttonInfoMouseClicked"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buttonInfoActionPerformed"/>
       </Events>
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="buttonInfo.setEnabled(false);"/>
       </AuxValues>
+    </Component>
+    <Component class="javax.swing.JButton" name="buttonGuardar">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Guardar"/>
+      </Properties>
+      <Events>
+        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="buttonGuardarMouseClicked"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

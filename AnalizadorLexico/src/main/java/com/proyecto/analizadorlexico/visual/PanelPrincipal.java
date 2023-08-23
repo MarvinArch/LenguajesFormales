@@ -53,6 +53,12 @@ public class PanelPrincipal extends javax.swing.JPanel {
         });
     }
     
+    public void limpiarErrores(){
+        textAreaErrores.setText("");
+    }
+    
+    
+    
     public int[] contadorLinea(String texto, int posicion){
         char espacio[]= texto.toCharArray();
         int posiciones[]=new int[2];
@@ -83,7 +89,7 @@ public class PanelPrincipal extends javax.swing.JPanel {
             for (int i =1 ; i<agregar.size(); i++) {
                 int posicion = jTextAreaEditable.getStyledDocument().getLength();
                 jTextAreaEditable.getStyledDocument().insertString(posicion, agregar.get(i), attrs);
-                jTextAreaEditable.getStyledDocument().insertString(posicion, "\n", null);
+                jTextAreaEditable.getStyledDocument().insertString(posicion, " \n", null);
             }
         } catch (Exception e) {
         }
@@ -115,36 +121,38 @@ public class PanelPrincipal extends javax.swing.JPanel {
            posicion =jTextAreaEditable.getText().indexOf(tokens.get(i).getLexema(), posicion+1);
            tokens.get(i).setPosicionReal(posicion); 
         }
-        String textoAremplazar=jTextAreaEditable.getText();
-        for (int i = 0; i < tokens.size(); i++) {
-            if (tokens.get(i).getGrupo().equals("Palabras clave") || tokens.get(i).getGrupo().equals("Constante")
-                    || tokens.get(i).getGrupo().equals("Comentario") || tokens.get(i).getGrupo().equals("Aritmeticos")) {
-                textoAremplazar=textoAremplazar.replaceFirst(tokens.get(i).getLexema(), "");
-            }
-        }
         
-        jTextAreaEditable.setText(textoAremplazar);
+        //jTextAreaEditable.setText(textoAremplazar);
         for (int i = 0; i < tokens.size(); i++) {
             try {
-                if(tokens.get(i).getGrupo().equals("Palabras clave")){
+                if (tokens.get(i).getGrupo().equals("Palabras clave")) {
                     Color colM = new Color(153, 82, 182);
                     StyleConstants.setForeground(attrs, colM);
-                    jTextAreaEditable.getStyledDocument().insertString(tokens.get(i).getPosicionReal(), tokens.get(i).getLexema(), attrs);
-                }else if (tokens.get(i).getGrupo().equals("Constante")) {
+                    jTextAreaEditable.getStyledDocument().setCharacterAttributes(tokens.get(i).getPosicionReal(), tokens.get(i).getPosicionReal() + tokens.get(i).getLexema().length(), attrs, true);
+                } else if (tokens.get(i).getGrupo().equals("Constante")) {
                     StyleConstants.setForeground(attrs, Color.RED);
-                    jTextAreaEditable.getStyledDocument().insertString(tokens.get(i).getPosicionReal(), tokens.get(i).getLexema(), attrs);
-                }else if(tokens.get(i).getGrupo().equals("Comentario")){
+                    jTextAreaEditable.getStyledDocument().setCharacterAttributes(tokens.get(i).getPosicionReal(), tokens.get(i).getPosicionReal() + tokens.get(i).getLexema().length(), attrs, true);
+                } else if (tokens.get(i).getGrupo().equals("Comentario")) {
                     Color colG = new Color(66, 73, 73);
                     StyleConstants.setForeground(attrs, colG);
-                    jTextAreaEditable.getStyledDocument().insertString(tokens.get(i).getPosicionReal(), tokens.get(i).getLexema(), attrs);
-                }else if(tokens.get(i).getGrupo().equals("Aritmeticos")){
+                    jTextAreaEditable.getStyledDocument().setCharacterAttributes(tokens.get(i).getPosicionReal(), tokens.get(i).getPosicionReal() + tokens.get(i).getLexema().length(), attrs, true);
+                } else if (tokens.get(i).getGrupo().equals("Aritmetico") || tokens.get(i).getGrupo().equals("Comparacion")
+                        ||(tokens.get(i).getGrupo().equals("Logicos")) || tokens.get(i).getGrupo().equals("Asignacion")) {
                     Color colC = new Color(52, 152, 219);
                     StyleConstants.setForeground(attrs, colC);
-                    jTextAreaEditable.getStyledDocument().insertString(tokens.get(i).getPosicionReal(), tokens.get(i).getLexema(), attrs);
+                    jTextAreaEditable.getStyledDocument().setCharacterAttributes(tokens.get(i).getPosicionReal(), tokens.get(i).getPosicionReal() + tokens.get(i).getLexema().length(), attrs, true);
+
+                }  else if(tokens.get(i).getGrupo().equals("Otros")){
+                    StyleConstants.setForeground(attrs, Color.GREEN);
+                    jTextAreaEditable.getStyledDocument().setCharacterAttributes(tokens.get(i).getPosicionReal(), tokens.get(i).getPosicionReal() + tokens.get(i).getLexema().length(), attrs, true);
+                }else {
+                    StyleConstants.setForeground(attrs, Color.WHITE);
+                    jTextAreaEditable.getStyledDocument().setCharacterAttributes(tokens.get(i).getPosicionReal(), tokens.get(i).getPosicionReal() + tokens.get(i).getLexema().length(), attrs, true);
                 }
             } catch (Exception e) {
                 System.out.println("error " + e.toString());
             }
+
         }
         
         StyleConstants.setForeground(attrs, Color.white);

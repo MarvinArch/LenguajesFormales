@@ -19,6 +19,8 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import com.proyecto.analizadorlexico.others.CargarArchivo;
+import com.proyecto.analizadorlexico.others.GuardaArchivo;
+import java.awt.Color;
 
 /**
  *
@@ -33,9 +35,13 @@ public class VentanaInicial extends javax.swing.JFrame {
     private int x ;
     private int y ;
     private String ubicacion;
+    private List<String> ubicacionesAbiertos;
+    private Informe info;
     ArrayList<PanelPrincipal> panel;
     public VentanaInicial() {
         panel= new ArrayList<>();
+        info = new Informe();
+        ubicacionesAbiertos= new ArrayList<>();
         this.setUndecorated(true);
         initComponents();
         Shape forma = new RoundRectangle2D.Double(0, 0, this.getBounds().width, this.getBounds().height, 30, 30);
@@ -72,6 +78,7 @@ public class VentanaInicial extends javax.swing.JFrame {
         tab.add(panel.get(panel.size()-1));
     }
     
+    
 
 
     /**
@@ -93,6 +100,7 @@ public class VentanaInicial extends javax.swing.JFrame {
         tab = new javax.swing.JTabbedPane();
         buttonAnalizar = new javax.swing.JButton();
         buttonInfo = new javax.swing.JButton();
+        buttonGuardar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(153, 153, 153));
@@ -203,6 +211,18 @@ public class VentanaInicial extends javax.swing.JFrame {
                 buttonInfoMouseClicked(evt);
             }
         });
+        buttonInfo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonInfoActionPerformed(evt);
+            }
+        });
+
+        buttonGuardar.setText("Guardar");
+        buttonGuardar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                buttonGuardarMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -210,11 +230,13 @@ public class VentanaInicial extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(PanelSuperior, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
-                .addGap(84, 84, 84)
+                .addContainerGap()
                 .addComponent(buttonCargar, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
+                .addComponent(buttonGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addComponent(buttonPestaña, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
                 .addComponent(ButtonCerrar)
                 .addGap(18, 18, 18)
                 .addComponent(buttonAnalizar, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -235,7 +257,8 @@ public class VentanaInicial extends javax.swing.JFrame {
                     .addComponent(buttonPestaña)
                     .addComponent(ButtonCerrar)
                     .addComponent(buttonAnalizar)
-                    .addComponent(buttonInfo))
+                    .addComponent(buttonInfo)
+                    .addComponent(buttonGuardar))
                 .addGap(18, 18, 18)
                 .addComponent(tab, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 608, Short.MAX_VALUE))
@@ -301,6 +324,7 @@ public class VentanaInicial extends javax.swing.JFrame {
         if (texto.get(0).equalsIgnoreCase("aceptado")) {
             texto.remove(0);
             int restul = JOptionPane.showConfirmDialog(this, "Desea Abrir en una nueva Ventana");
+            ubicacionesAbiertos.add(arch.getDireccion());
             if (restul == 0) {
                 crearPanel();
                 apuntador = panel.size() - 1;
@@ -346,18 +370,62 @@ public class VentanaInicial extends javax.swing.JFrame {
         boolean errores=ana.analizar() ;
         if (errores==false) {
             buttonInfo.setEnabled(true);
+            info.llenartabla(ana.getToken());
             panel.get(tab.getSelectedIndex()).remplaceText(ana.getToken());
+            this.panel.get(tab.getSelectedIndex()).limpiarErrores();
         }else{
             buttonInfo.setEnabled(false);
             List<String> lista = new ArrayList<>();
-            lista.add(ana.getErrores().get(0).toString());
+            int err= ana.getErrores().size();
+            for (int i = 0; i < err; i++) {
+                lista.add(ana.getErrores().get(i).toString());
+            }
             this.panel.get(tab.getSelectedIndex()).cambiarTextoReporte(lista );
         }
     }//GEN-LAST:event_buttonAnalizarMouseClicked
 
     private void buttonInfoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_buttonInfoMouseClicked
-        
+        if(buttonInfo.getText().equals("Ver Informe")){
+            tab.setVisible(false);
+            
+            this.add(info);
+            info.setVisible(true);
+            info.setBounds(2, 100, 1050, 660);
+            buttonInfo.setText("Volver Archivo");
+            buttonInfo.setBackground(Color.red);
+        }else{
+            buttonInfo.setText("Ver Informe");
+            info.setVisible(false);
+            tab.setVisible(true);
+            buttonInfo.setBackground(buttonAnalizar.getBackground());
+        }
     }//GEN-LAST:event_buttonInfoMouseClicked
+
+    private void buttonGuardarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_buttonGuardarMouseClicked
+        GuardaArchivo arch = new GuardaArchivo();
+        if (labelTitulo.getText().contains("Sin Titulo")) {
+            boolean grardar = arch.guardarNuevoArchivo(this, this.panel.get(tab.getSelectedIndex()).devolverTexto());
+            if (grardar) {
+                ubicacionesAbiertos.add(arch.getUbicacion());
+                int apuntador = tab.getSelectedIndex();
+                tab.setTitleAt(apuntador, arch.devolverTitulo());
+                tab.setSelectedIndex(apuntador);
+                labelTitulo.setText(arch.devolverTitulo());
+            }
+
+        } else {
+            String ubica=ubicacionesAbiertos.stream()
+                    .filter(ubi -> ubi.contains(labelTitulo.getText()))
+                    .findFirst()
+                    .orElseThrow(()->new IllegalArgumentException());
+            
+            arch.guardarArchivoExistente(this, this.panel.get(tab.getSelectedIndex()).devolverTexto(), ubica);
+        }
+    }//GEN-LAST:event_buttonGuardarMouseClicked
+
+    private void buttonInfoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonInfoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_buttonInfoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -399,6 +467,7 @@ public class VentanaInicial extends javax.swing.JFrame {
     private javax.swing.JPanel PanelSuperior;
     private javax.swing.JButton buttonAnalizar;
     private javax.swing.JButton buttonCargar;
+    private javax.swing.JButton buttonGuardar;
     private javax.swing.JButton buttonInfo;
     private javax.swing.JButton buttonPestaña;
     private javax.swing.JLabel labelCierre;

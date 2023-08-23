@@ -85,7 +85,8 @@ public class AnalizadorLetras {
                     } else if (reservados.getOtros().containsKey(letra[j])) {//Agrupacion y puntos
                         cadena = tokenLista(cadena, fila, columna, reservados.getOtros().get(letra[j]), "Otros");
                         estado = 0;
-                    }else if(letra[j]==' '){
+                    }else if(letra[j]==' '|| letra[j]=='\t' ){
+                        estado=0;
                     }else{
                         errores.add(new Errores(errores.size(), columna, fila, "Error de Inicio", cadena));
                     }
@@ -123,7 +124,9 @@ public class AnalizadorLetras {
                         cadena = tokenLista(cadena.replace(letra[j], ' '), fila, columna, "Entero", "Constante");
                         j--;
                     } else {
-                        System.out.println("error");
+                        j+=salirError(cadena, "Caracter Invalido", columna, fila, letra, j);
+                        cadena="";
+                        estado=0;                       
                     }
                 } else if (estado == 3) {//decimales
                     cadena += letra[j];
@@ -141,7 +144,9 @@ public class AnalizadorLetras {
                         cadena = tokenLista(cadena.replace(letra[j], ' '), fila, columna, "Decimal", "Constante");
                         j--;
                     } else {
-                        System.out.println("error");
+                        j+=salirError(cadena, "Caracter Invalido", columna, fila, letra, j);
+                        cadena="";
+                        estado=0;                        
                     }
                 } else if (estado == 5) {//Comillas cierre
                     cadena += letra[j];
@@ -150,7 +155,7 @@ public class AnalizadorLetras {
                         estado = 0;
                     } else if (j == letra.length - 1) {
                         estado = 0;
-                         errores.add(new Errores(errores.size(), columna, fila, "No se encontro cierre de cadena", cadena));
+                        salirError(cadena, "No se encontro cierre de cadena", columna, fila, letra, j);
                         cadena = "";
                     }
                 } else if (estado == 6) {//Comentario
@@ -169,6 +174,16 @@ public class AnalizadorLetras {
         }
         return false;
 
+    }
+    
+    private int salirError(String cadena, String descripcion, int columna, int fila, char[] texto, int index){
+        errores.add(new Errores(errores.size()+1, columna+cadena.length()-1, fila, descripcion, cadena));
+        for (int i = index; i < texto.length; i++) {
+            if (texto[i]==' ') {
+                return i-index;
+            }
+        }
+        return 0;
     }
 
     private boolean identificador(char letra) {
@@ -202,7 +217,7 @@ public class AnalizadorLetras {
 
     private String tokenLista(String cadena, int fila, int columan, String tipo, String grupo) {
         cadena = cadena.trim();
-        if (tipo.equals("Identificador")) {
+        if (tipo!=null && tipo.equals("Identificador")) {
             if (reservados.getReservadas().containsKey(cadena)) {
                 token.add(new Token(columan, fila, cadena, reservados.getReservadas().get(cadena), "Palabras clave"));
             } else {
@@ -222,17 +237,16 @@ public class AnalizadorLetras {
 
     private int comprobarAritmeticos(char actual, char future, int fila, int columna, String cadena) {
         if (reservados.getAritmeticos().containsKey(actual + "" + future)) {
-            tokenLista(actual + "" + future, fila, columna, reservados.getAritmeticos().get(actual + "" + future), "Aritmeticos");
+            tokenLista(actual + "" + future, fila, columna, reservados.getAritmeticos().get(actual + "" + future), "Aritmetico");
             return 1;
         } else {
-            tokenLista(cadena, fila, columna, reservados.getAritmeticos().get(cadena), "Aritmeticos");
+            tokenLista(cadena, fila, columna, reservados.getAritmeticos().get(cadena.trim()), "Aritmetico");
             return 0;
         }
     }
 
     private int comprobarComparacion(char actual, char future, int fila, int columna, String cadena) {
         if (reservados.getComparacion().containsKey(actual + "" + future)) {
-            System.out.println(actual + "" + future);
             tokenLista(actual + "" + future, fila, columna, reservados.getComparacion().get(actual + "" + future), "Comparacion");
             return 1;
         } else {

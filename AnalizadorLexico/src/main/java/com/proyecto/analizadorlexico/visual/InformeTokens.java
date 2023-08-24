@@ -5,7 +5,10 @@
 package com.proyecto.analizadorlexico.visual;
 
 import com.proyecto.analizadorlexico.model.Token;
+import com.proyecto.analizadorlexico.others.Graphviz;
 import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -34,8 +37,10 @@ public class InformeTokens extends javax.swing.JPanel {
     private List<JLabel> columna;
     private List<JLabel> btn;
     private List<Token> listaTokensinicial;
-    public InformeTokens() {
+    private String direccion;
+    public InformeTokens(String direccion) {
         initComponents();
+        this.direccion=direccion;
         posY=0;
         botones = new ArrayList<>();
         tokens = new ArrayList<>();
@@ -47,8 +52,8 @@ public class InformeTokens extends javax.swing.JPanel {
         listaTokensinicial = new ArrayList<>();
     }
     
-    public void crearTabla( List<Token> listaTokens){
-        posY=0;
+    public void crearTabla(List<Token> listaTokens) {
+        posY = 0;
         tokens.clear();
         lexema.clear();
         patron.clear();
@@ -62,32 +67,83 @@ public class InformeTokens extends javax.swing.JPanel {
         for (int i = 0; i < listaTokens.size(); i++) {
             posY += 50;
             tokens.add(new JLabel(listaTokens.get(i).getGrupo(), SwingConstants.CENTER));
-            tokens.get(i+1).setBounds(0, posY, 175, 50);
-            tokens.get(i+1).setBorder(BorderFactory.createLineBorder(Color.BLACK));
-            panel.add(tokens.get(i+1));
+            tokens.get(i + 1).setBounds(0, posY, 175, 50);
+            tokens.get(i + 1).setBorder(BorderFactory.createLineBorder(Color.BLACK));
+            panel.add(tokens.get(i + 1));
             patron.add(new JLabel(listaTokens.get(i).getPatron(), SwingConstants.CENTER));
-            patron.get(i+1).setBounds(175, posY, 175, 50);
-            patron.get(i+1).setBorder(BorderFactory.createLineBorder(Color.BLACK));
-            panel.add(patron.get(i+1));
+            patron.get(i + 1).setBounds(175, posY, 175, 50);
+            patron.get(i + 1).setBorder(BorderFactory.createLineBorder(Color.BLACK));
+            panel.add(patron.get(i + 1));
             lexema.add(new JLabel(listaTokens.get(i).getLexema(), SwingConstants.CENTER));
-            lexema.get(i+1).setBounds(350, posY, 175, 50);
-            lexema.get(i+1).setBorder(BorderFactory.createLineBorder(Color.BLACK));
-            panel.add(lexema.get(i+1));
-            linea.add(new JLabel(listaTokens.get(i).getFila()+"", SwingConstants.CENTER));
-            linea.get(i+1).setBounds(525, posY, 175, 50);
-            linea.get(i+1).setBorder(BorderFactory.createLineBorder(Color.BLACK));
-            panel.add(linea.get(i+1));
-            columna.add(new JLabel(listaTokens.get(i).getColumna()+"", SwingConstants.CENTER));
-            columna.get(i+1).setBounds(700, posY, 175, 50);
-            columna.get(i+1).setBorder(BorderFactory.createLineBorder(Color.BLACK));
-            panel.add(columna.get(i+1));
+            lexema.get(i + 1).setBounds(350, posY, 175, 50);
+            lexema.get(i + 1).setBorder(BorderFactory.createLineBorder(Color.BLACK));
+            panel.add(lexema.get(i + 1));
+            linea.add(new JLabel(listaTokens.get(i).getFila() + "", SwingConstants.CENTER));
+            linea.get(i + 1).setBounds(525, posY, 175, 50);
+            linea.get(i + 1).setBorder(BorderFactory.createLineBorder(Color.BLACK));
+            panel.add(linea.get(i + 1));
+            columna.add(new JLabel(listaTokens.get(i).getColumna() + "", SwingConstants.CENTER));
+            columna.get(i + 1).setBounds(700, posY, 175, 50);
+            columna.get(i + 1).setBorder(BorderFactory.createLineBorder(Color.BLACK));
+            panel.add(columna.get(i + 1));
             btn.add(new JLabel());
-            btn.get(i+1).setBounds(875, posY, 175, 50);
-            btn.get(i+1).setBorder(BorderFactory.createLineBorder(Color.BLACK));
-            panel.add(btn.get(i+1));
-            botones.add(new JButton("grafico" ));
+            btn.get(i + 1).setBounds(875, posY, 175, 50);
+            btn.get(i + 1).setBorder(BorderFactory.createLineBorder(Color.BLACK));
+            panel.add(btn.get(i + 1));
+            botones.add(new JButton("grafico"));
             botones.get(i).setBounds(0, 5, 150, 40);
-            btn.get(i+1).add(botones.get(i));
+            btn.get(i + 1).add(botones.get(i));
+            botones.get(i).addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent ae) {
+                    String variable = "";
+                    int posicion = -1;
+                    Graphviz grafico = new Graphviz();
+                    for (int j = 0; j < botones.size(); j++) {
+                        if (ae.getSource() == botones.get(j)) {
+                            variable = lexema.get(j + 1).getText();
+                            
+                        }
+                    }
+
+                    for (int j = 0; j < listaTokensinicial.size(); j++) {
+                        if (listaTokensinicial.get(j).getLexema().equalsIgnoreCase(variable)) {
+                            posicion = j;
+                            break;
+                        }
+                    }
+                    String complemento = "identificador";
+                    if (listaTokensinicial.get(posicion).getToken().equalsIgnoreCase("identificador")) {
+                        complemento = "identificador";
+                    } else if (listaTokensinicial.get(posicion).getToken().equalsIgnoreCase("entero")) {
+                        complemento = "enteros";
+                    } else if (listaTokensinicial.get(posicion).getToken().equalsIgnoreCase("decimal")) {
+                        complemento = "decimal";
+                    } else {
+                        grafico.crearGrafico(listaTokensinicial.get(posicion).getLexema(), direccion, listaTokensinicial.get(posicion).getToken());
+                        complemento = listaTokensinicial.get(posicion).getToken();
+                    }
+
+                    grafico.Dibujar(direccion + "src/main/java/com/proyecto/analizadorlexico/Resource/Graficos/" + complemento + ".dot", direccion + "src/main/java/com/proyecto/analizadorlexico/Resource/Graficos/" + complemento + ".png");
+
+                    try {
+
+                        Thread.sleep(100);
+
+                    } catch (InterruptedException e) {
+
+                        System.out.println("no duerme");
+
+                    }
+                    GenerarGraficos grafic = new GenerarGraficos();
+                    grafic.dibujarGrafico(complemento, direccion);
+                    grafic.setVisible(false);
+                    grafic.dibujarGrafico(complemento, direccion);
+                    grafic.setVisible(true);
+
+                }
+
+            });
             try {
                 panel.getStyledDocument().insertString(panel.getStyledDocument().getLength(), "\n\n\n", null);
             } catch (Exception e) {

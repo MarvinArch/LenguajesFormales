@@ -189,6 +189,7 @@ public class PanelPrincipal extends javax.swing.JPanel {
         labelConteo.setText("Linea 0 Columna 0");
 
         jTextAreaEditable.setBackground(new java.awt.Color(153, 153, 153));
+        jTextAreaEditable.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         jScrollPane1.setViewportView(jTextAreaEditable);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);

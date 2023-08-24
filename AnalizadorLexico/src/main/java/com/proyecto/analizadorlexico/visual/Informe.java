@@ -17,15 +17,13 @@ public class Informe extends javax.swing.JPanel {
      * Creates new form Informe
      */
     private InformeTokens tabla;
-    private GenerarGraficos grafic;
-    public Informe() {
+    public Informe(String ruta) {
         initComponents();
-        tabla = new InformeTokens();
+        tabla = new InformeTokens(ruta);
         this.add(tabla);
         tabla.setBounds(0, 50, 1050, 640);
-        grafic = new GenerarGraficos();
-        this.add(grafic);
         tabla.setVisible(true);
+        
     }
     
     public void llenartabla(List<Token> lista){

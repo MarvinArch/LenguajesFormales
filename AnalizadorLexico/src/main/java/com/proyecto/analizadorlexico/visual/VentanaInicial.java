@@ -37,10 +37,9 @@ public class VentanaInicial extends javax.swing.JFrame {
     private String ubicacion;
     private List<String> ubicacionesAbiertos;
     private Informe info;
-    ArrayList<PanelPrincipal> panel;
+    private ArrayList<PanelPrincipal> panel;
     public VentanaInicial() {
         panel= new ArrayList<>();
-        info = new Informe();
         ubicacionesAbiertos= new ArrayList<>();
         this.setUndecorated(true);
         initComponents();
@@ -48,7 +47,9 @@ public class VentanaInicial extends javax.swing.JFrame {
         this.setShape(forma);
         URL rutaca = AnalizadorLexico.class.getProtectionDomain().getCodeSource().getLocation(); 
         String ruta = rutaca.getPath();
+        info = new Informe(ruta);
         this.ubicacion = ruta.replace("target/classes/", "");
+         info = new Informe(ubicacion);
         imagenCierre(ubicacion);
         imagenMini(ubicacion);
         tab.setBounds(3, 100, 1080,700);
@@ -57,6 +58,7 @@ public class VentanaInicial extends javax.swing.JFrame {
         tab.add(panel.get(0));
         tab.setTitleAt(0, "Sin Titulo");
         labelTitulo.setText("Sin Titulo");
+        
     }
     
     public void imagenCierre(String direccion){

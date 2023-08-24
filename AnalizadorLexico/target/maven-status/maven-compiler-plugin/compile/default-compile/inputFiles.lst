@@ -1,5 +1,14 @@
-/home/david/Documents/LenguajesFormales/AnalizadorLexico/src/main/java/com/proyecto/analizadorlexico/visual/PanelPrincipal.java
-/home/david/Documents/LenguajesFormales/AnalizadorLexico/src/main/java/others/NumerarLineas.java
-/home/david/Documents/LenguajesFormales/AnalizadorLexico/src/main/java/others/CargarArchivo.java
+/home/david/Documents/LenguajesFormales/AnalizadorLexico/src/main/java/com/proyecto/analizadorlexico/others/Mapas.java
+/home/david/Documents/LenguajesFormales/AnalizadorLexico/src/main/java/com/proyecto/analizadorlexico/others/CargarArchivo.java
+/home/david/Documents/LenguajesFormales/AnalizadorLexico/src/main/java/com/proyecto/analizadorlexico/others/GuardaArchivo.java
+/home/david/Documents/LenguajesFormales/AnalizadorLexico/src/main/java/com/proyecto/analizadorlexico/model/Token.java
+/home/david/Documents/LenguajesFormales/AnalizadorLexico/src/main/java/com/proyecto/analizadorlexico/visual/GenerarGraficos.java
 /home/david/Documents/LenguajesFormales/AnalizadorLexico/src/main/java/com/proyecto/analizadorlexico/AnalizadorLexico.java
+/home/david/Documents/LenguajesFormales/AnalizadorLexico/src/main/java/com/proyecto/analizadorlexico/visual/InformeTokens.java
+/home/david/Documents/LenguajesFormales/AnalizadorLexico/src/main/java/com/proyecto/analizadorlexico/model/Errores.java
+/home/david/Documents/LenguajesFormales/AnalizadorLexico/src/main/java/com/proyecto/analizadorlexico/others/Graphviz.java
+/home/david/Documents/LenguajesFormales/AnalizadorLexico/src/main/java/com/proyecto/analizadorlexico/visual/Informe.java
+/home/david/Documents/LenguajesFormales/AnalizadorLexico/src/main/java/com/proyecto/analizadorlexico/visual/PanelPrincipal.java
+/home/david/Documents/LenguajesFormales/AnalizadorLexico/src/main/java/com/proyecto/analizadorlexico/others/AnalizadorLetras.java
+/home/david/Documents/LenguajesFormales/AnalizadorLexico/src/main/java/com/proyecto/analizadorlexico/others/NumerarLineas.java
 /home/david/Documents/LenguajesFormales/AnalizadorLexico/src/main/java/com/proyecto/analizadorlexico/visual/VentanaInicial.java

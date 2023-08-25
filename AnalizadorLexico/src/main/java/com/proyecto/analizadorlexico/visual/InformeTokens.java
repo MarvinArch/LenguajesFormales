@@ -119,10 +119,14 @@ public class InformeTokens extends javax.swing.JPanel {
                         complemento = "enteros";
                     } else if (listaTokensinicial.get(posicion).getToken().equalsIgnoreCase("decimal")) {
                         complemento = "decimal";
+                    }else if(listaTokensinicial.get(posicion).getToken().equalsIgnoreCase("cadena")){
+                        complemento = "cadena";
+                    }else if(listaTokensinicial.get(posicion).getToken().equalsIgnoreCase("comentario")){
+                        complemento = "comentario";
                     } else {
                         grafico.crearGrafico(listaTokensinicial.get(posicion).getLexema(), direccion, listaTokensinicial.get(posicion).getToken());
                         complemento = listaTokensinicial.get(posicion).getToken();
-                    }
+                    } 
 
                     grafico.Dibujar(direccion + "src/main/java/com/proyecto/analizadorlexico/Resource/Graficos/" + complemento + ".dot", direccion + "src/main/java/com/proyecto/analizadorlexico/Resource/Graficos/" + complemento + ".png");
 

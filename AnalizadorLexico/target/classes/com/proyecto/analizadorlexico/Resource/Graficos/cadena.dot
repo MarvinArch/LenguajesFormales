@@ -1,0 +1,10 @@
+digraph finite_state_machine {
+	rankdir=LR;
+node [shape = doublecircle]; S3;
+node [shape = circle];
+S0->S1 [label = "\'|\""]; 
+S1-> S2 [label= "L|D|S"];
+S2-> S2 [label= "L|D|S"];
+S2-> S3 [label= "\'|\""];
+
+}

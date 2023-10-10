@@ -373,7 +373,7 @@ public class VentanaInicial extends javax.swing.JFrame {
         if (errores==false) {
             buttonInfo.setEnabled(true);
             info.llenartabla(ana.getToken());
-            panel.get(tab.getSelectedIndex()).remplaceText(ana.getToken());
+            panel.get(tab.getSelectedIndex()).remplaceText2(ana.getToken());//cambia de color el texto
             this.panel.get(tab.getSelectedIndex()).limpiarErrores();
         }else{
             buttonInfo.setEnabled(false);

@@ -6,6 +6,7 @@ package com.proyecto.analizadorlexico.visual;
 
 import com.proyecto.analizadorlexico.model.Token;
 import java.util.List;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -42,6 +43,8 @@ public class Informe extends javax.swing.JPanel {
 
         buttonClasificar = new javax.swing.JButton();
         jComboBox1 = new javax.swing.JComboBox<>();
+        jTextFieldBuscar = new javax.swing.JTextField();
+        jButtonBuscar = new javax.swing.JButton();
 
         buttonClasificar.setText("Clasificar");
         buttonClasificar.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -52,25 +55,52 @@ public class Informe extends javax.swing.JPanel {
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Todos", "Identificador", "Aritmetico", "Comparacion", "Logicos", "Asignacion", "Palabras Clave", "Constante", "Comentario", "Otros", " " }));
 
+        jTextFieldBuscar.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        jTextFieldBuscar.setText("Buscar Lexema");
+        jTextFieldBuscar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTextFieldBuscarMouseClicked(evt);
+            }
+        });
+        jTextFieldBuscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextFieldBuscarActionPerformed(evt);
+            }
+        });
+
+        jButtonBuscar.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        jButtonBuscar.setText("Buscar");
+        jButtonBuscar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButtonBuscarMouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(364, 364, 364)
+                .addGap(90, 90, 90)
                 .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(34, 34, 34)
+                .addGap(43, 43, 43)
                 .addComponent(buttonClasificar, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(320, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 174, Short.MAX_VALUE)
+                .addComponent(jTextFieldBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jButtonBuscar)
+                .addGap(164, 164, 164))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(26, 26, 26)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(buttonClasificar)
                     .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(buttonClasificar))
-                .addContainerGap(591, Short.MAX_VALUE))
+                    .addComponent(jTextFieldBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButtonBuscar))
+                .addContainerGap(588, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -83,9 +113,32 @@ public class Informe extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_buttonClasificarMouseClicked
 
+    private void jButtonBuscarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButtonBuscarMouseClicked
+        if (!jTextFieldBuscar.equals("Buscar Lexema") && !jTextFieldBuscar.equals(" ")) {
+            List<Token> TokenLista = tabla.getListaTokensinicial().stream().filter(tok -> tok.getLexema().contains(jTextFieldBuscar.getText())).toList();
+            if (TokenLista.size()!=0) {
+                tabla.crearTabla(TokenLista);
+            }else{
+                JOptionPane.showMessageDialog(this, "No existen Lexemas que coincidan con la Busqueda");
+            }
+        }
+    }//GEN-LAST:event_jButtonBuscarMouseClicked
+
+    private void jTextFieldBuscarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTextFieldBuscarMouseClicked
+        if(jTextFieldBuscar.getText().equals("Buscar Lexema")){
+            jTextFieldBuscar.setText("");
+        }
+    }//GEN-LAST:event_jTextFieldBuscarMouseClicked
+
+    private void jTextFieldBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldBuscarActionPerformed
+        
+    }//GEN-LAST:event_jTextFieldBuscarActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonClasificar;
+    private javax.swing.JButton jButtonBuscar;
     private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JTextField jTextFieldBuscar;
     // End of variables declaration//GEN-END:variables
 }

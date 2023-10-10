@@ -5,11 +5,15 @@
 package com.proyecto.analizadorlexico.visual;
 
 import com.proyecto.analizadorlexico.model.Token;
+import com.proyecto.analizadorlexico.others.AnalizadorLetras;
 import java.util.List;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 import com.proyecto.analizadorlexico.others.NumerarLineas;
 import java.awt.Color;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import javax.swing.JTextPane;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
@@ -27,7 +31,6 @@ public class PanelPrincipal extends javax.swing.JPanel {
     public PanelPrincipal() {
         initComponents();
         numeros = new NumerarLineas(jTextAreaEditable);
-        
         jScrollPane1.setViewportView(jTextAreaEditable);
         jScrollPane1.setRowHeaderView(numeros);
         this.setToolTipText("sin titulo");
@@ -51,6 +54,13 @@ public class PanelPrincipal extends javax.swing.JPanel {
                 modificarLabelConteo(linea, columna);
             }
         });
+        SimpleAttributeSet attrs = new SimpleAttributeSet();
+        StyleConstants.setForeground(attrs, Color.white);
+        //jTextAreaEditable.setText("");
+        try {
+            jTextAreaEditable.getStyledDocument().insertString(0, "", attrs);
+        } catch (Exception e) {
+        }
     }
     
     public void limpiarErrores(){
@@ -89,10 +99,14 @@ public class PanelPrincipal extends javax.swing.JPanel {
             for (int i =1 ; i<agregar.size(); i++) {
                 int posicion = jTextAreaEditable.getStyledDocument().getLength();
                 jTextAreaEditable.getStyledDocument().insertString(posicion, agregar.get(i), attrs);
-                jTextAreaEditable.getStyledDocument().insertString(posicion, " \n", null);
+                jTextAreaEditable.getStyledDocument().insertString(posicion, " \n", null);                
             }
         } catch (Exception e) {
         }
+        
+        AnalizadorLetras anali = new AnalizadorLetras(jTextAreaEditable.getText());
+        boolean analizar = anali.analizar();
+        remplaceText2(anali.getToken());
     }
     
     public void cambiarTextoReporte(List<String> errores){
@@ -107,15 +121,10 @@ public class PanelPrincipal extends javax.swing.JPanel {
         return jTextAreaEditable.getText();
     } 
     
-    public void remplaceText(List<Token> tokens){
+    
+    public void remplaceText2(List<Token> tokens){
         SimpleAttributeSet attrs = new SimpleAttributeSet();
-        String texto= jTextAreaEditable.getText();
-        StyleConstants.setForeground(attrs, Color.white);
-        jTextAreaEditable.setText("");
-        try {
-            jTextAreaEditable.getStyledDocument().insertString(0, texto, attrs);
-        } catch (Exception e) {
-        }
+        
         int posicion=-1;
         for (int i = 0; i < tokens.size(); i++) { 
            posicion =jTextAreaEditable.getText().indexOf(tokens.get(i).getLexema(), posicion+1);
@@ -128,26 +137,26 @@ public class PanelPrincipal extends javax.swing.JPanel {
                 if (tokens.get(i).getGrupo().equals("Palabras clave")) {
                     Color colM = new Color(153, 82, 182);
                     StyleConstants.setForeground(attrs, colM);
-                    jTextAreaEditable.getStyledDocument().setCharacterAttributes(tokens.get(i).getPosicionReal(), tokens.get(i).getPosicionReal() + tokens.get(i).getLexema().length(), attrs, true);
+                    jTextAreaEditable.getStyledDocument().setCharacterAttributes(tokens.get(i).getPosicionReal(), tokens.get(i).getLexema().length(), attrs, true);
                 } else if (tokens.get(i).getGrupo().equals("Constante")) {
                     StyleConstants.setForeground(attrs, Color.RED);
-                    jTextAreaEditable.getStyledDocument().setCharacterAttributes(tokens.get(i).getPosicionReal(), tokens.get(i).getPosicionReal() + tokens.get(i).getLexema().length(), attrs, true);
+                    jTextAreaEditable.getStyledDocument().setCharacterAttributes(tokens.get(i).getPosicionReal(), tokens.get(i).getLexema().length(), attrs, true);
                 } else if (tokens.get(i).getGrupo().equals("Comentario")) {
                     Color colG = new Color(66, 73, 73);
                     StyleConstants.setForeground(attrs, colG);
-                    jTextAreaEditable.getStyledDocument().setCharacterAttributes(tokens.get(i).getPosicionReal(), tokens.get(i).getPosicionReal() + tokens.get(i).getLexema().length(), attrs, true);
+                    jTextAreaEditable.getStyledDocument().setCharacterAttributes(tokens.get(i).getPosicionReal(), tokens.get(i).getLexema().length(), attrs, true);
                 } else if (tokens.get(i).getGrupo().equals("Aritmetico") || tokens.get(i).getGrupo().equals("Comparacion")
                         ||(tokens.get(i).getGrupo().equals("Logicos")) || tokens.get(i).getGrupo().equals("Asignacion")) {
                     Color colC = new Color(52, 152, 219);
                     StyleConstants.setForeground(attrs, colC);
-                    jTextAreaEditable.getStyledDocument().setCharacterAttributes(tokens.get(i).getPosicionReal(), tokens.get(i).getPosicionReal() + tokens.get(i).getLexema().length(), attrs, true);
+                    jTextAreaEditable.getStyledDocument().setCharacterAttributes(tokens.get(i).getPosicionReal(), tokens.get(i).getLexema().length(), attrs, true);
 
                 }  else if(tokens.get(i).getGrupo().equals("Otros")){
                     StyleConstants.setForeground(attrs, Color.GREEN);
-                    jTextAreaEditable.getStyledDocument().setCharacterAttributes(tokens.get(i).getPosicionReal(), tokens.get(i).getPosicionReal() + tokens.get(i).getLexema().length(), attrs, true);
+                    jTextAreaEditable.getStyledDocument().setCharacterAttributes(tokens.get(i).getPosicionReal(), tokens.get(i).getLexema().length(), attrs, true);
                 }else {
                     StyleConstants.setForeground(attrs, Color.WHITE);
-                    jTextAreaEditable.getStyledDocument().setCharacterAttributes(tokens.get(i).getPosicionReal(), tokens.get(i).getPosicionReal() + tokens.get(i).getLexema().length(), attrs, true);
+                    jTextAreaEditable.getStyledDocument().setCharacterAttributes(tokens.get(i).getPosicionReal(), tokens.get(i).getLexema().length(), attrs, true);
                 }
             } catch (Exception e) {
                 System.out.println("error " + e.toString());
@@ -190,6 +199,11 @@ public class PanelPrincipal extends javax.swing.JPanel {
 
         jTextAreaEditable.setBackground(new java.awt.Color(153, 153, 153));
         jTextAreaEditable.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jTextAreaEditable.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jTextAreaEditableKeyReleased(evt);
+            }
+        });
         jScrollPane1.setViewportView(jTextAreaEditable);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -221,6 +235,38 @@ public class PanelPrincipal extends javax.swing.JPanel {
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jTextAreaEditableKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextAreaEditableKeyReleased
+        // TODO add your handling code here:
+        Map<Character, String> otros;
+        char salto=10;
+        otros= new HashMap<>();
+        otros.put('(', "Parentesis");
+        otros.put(')', "Parentesis");
+        otros.put('{', "Llaves");
+        otros.put('}', "Llaves");
+        otros.put('[', "Corchetes");
+        otros.put(']', "Corchetes");
+        otros.put(',', "Coma");
+        otros.put(';', "Punto y Coma");
+        otros.put(':', "Dos Puntos");
+        otros.put('.', "Punto");
+        otros.put(' ', "espacio");
+        otros.put(salto,"salto de linea");
+        
+        if (otros.containsKey(evt.getKeyChar())) {
+            
+            AnalizadorLetras anali = new AnalizadorLetras(jTextAreaEditable.getText());
+            boolean analizar = anali.analizar();
+            int temp = jTextAreaEditable.getCaretPosition();
+            int[] temp2 =contadorLinea(jTextAreaEditable.getText(), temp);
+            int posY=temp2[0]+1;
+            List<Token> remplazo1= anali.getToken().stream().filter(tok -> tok.getFila()==posY).toList();
+            
+            remplaceText2(remplazo1);
+        }
+        
+    }//GEN-LAST:event_jTextAreaEditableKeyReleased
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

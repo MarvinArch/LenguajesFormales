@@ -3,7 +3,6 @@ package com.proyecto.analizadorlexico.others;
 import com.proyecto.analizadorlexico.model.Errores;
 import com.proyecto.analizadorlexico.model.Token;
 import java.util.ArrayList;
-import javax.xml.transform.Source;
 
 /**
  *
@@ -48,6 +47,7 @@ public class AnalizadorLetras {
         int columna = 0;
         int estado = 0;
         String cadena = "";
+        char tipoComilla=' ';
         /*
         estado 0 es de entrada clasifica dependiendo del caracter que recibe
         estado 1 comprueba si se cumplen las reglas para ser identificador
@@ -76,6 +76,7 @@ public class AnalizadorLetras {
                         cadena = "";
                         estado = 0;
                     } else if (letra[j] == 34 || letra[j] == 39) {// comillas
+                        tipoComilla=letra[j];
                         estado = 5;
                     } else if (letra[j] == 35) {//comentario
                         estado = 6;
@@ -89,7 +90,6 @@ public class AnalizadorLetras {
                     }else if(letra[j]==' '|| letra[j]=='\t' ){
                         estado=0;
                     }else if(letra[j]==92){
-                        System.out.println("");
                     }else{
                         errores.add(new Errores(errores.size(), columna, fila, "Error de Inicio", cadena));
                         estado=0;
@@ -101,14 +101,11 @@ public class AnalizadorLetras {
                         estado = 1;
                         cadena += letra[j];
                     } else {
-                        if (letra[j] == ' ') {
-                            cadena = tokenLista(cadena, fila, columna, "Identificador", "Identificador");
-                            estado = 0;
-                        } else if (comprobarAdjuntos(letra[j]) != 0) {
-                            estado = 0;
-                            cadena = tokenLista(cadena, fila, columna, "Identificador", "Identificador");
-                            j--;
-                        }
+                        cadena = tokenLista(cadena, fila, columna, "Identificador", "Identificador");
+                        j--;
+                        estado=0;
+                        cadena="";
+                        
                     }
                 } else if (estado == 2) {//Enteros
                     cadena += letra[j];
@@ -154,7 +151,7 @@ public class AnalizadorLetras {
                     }
                 } else if (estado == 5) {//Comillas cierre
                     cadena += letra[j];
-                    if (letra[j] == 34 || letra[j] == 39) {
+                    if ((letra[j] == 34 || letra[j] == 39) && tipoComilla==letra[j]) {
                         cadena = tokenLista(cadena, fila, columna, "Cadena", "Constante");
                         estado = 0;
                     } else if (j == letra.length - 1) {
@@ -165,16 +162,14 @@ public class AnalizadorLetras {
                 } else if (estado == 6) {//Comentario
                     cadena += letra[j];
                     if (j == letra.length - 1) {
-                        cadena = tokenLista(cadena, fila, columna, "Comentario", "Comentario");
+                        //cadena = tokenLista(cadena, fila, columna, "Comentario", "Comentario");
                         estado = 0;
                     }
                 } else if (letra[j] == ' ') {
                     columna++;
                 }
-                System.out.println("columna"+j);
             }
-            System.out.println(i);
-        }      
+        }        
         if (errores.size()>0) {
             return true;
         }
@@ -191,6 +186,8 @@ public class AnalizadorLetras {
         }
         return 0;
     }
+    
+    //private void 
 
     private boolean identificador(char letra) {
         return ((letra < 123 && letra > 96) || (letra < 91 && letra > 64)
@@ -227,6 +224,9 @@ public class AnalizadorLetras {
             }
         } else {
             token.add(new Token(columan, fila, cadena, tipo, grupo));
+        }
+        if(cadena.equals("print")){
+            return "print";
         }
         return "";
     }

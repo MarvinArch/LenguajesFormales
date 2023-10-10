@@ -64,9 +64,10 @@ public final class Mapas {
     }
     
     private void llenarComparacion(){
+        char admiracion=33;
         comparacion= new HashMap<>();
         comparacion.put("==", "Igualar");
-        comparacion.put("!=", "diferente");
+        comparacion.put(admiracion+"=", "diferente");
         comparacion.put(">", "Mayor que");
         comparacion.put("<", "Menor que");
         comparacion.put(">=", "Mayor o Igual que");

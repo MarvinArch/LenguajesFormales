@@ -3,6 +3,7 @@ package com.proyecto.analizadorlexico.others;
 import com.proyecto.analizadorlexico.model.Errores;
 import com.proyecto.analizadorlexico.model.Token;
 import java.util.ArrayList;
+import javax.xml.transform.Source;
 
 /**
  *
@@ -70,7 +71,7 @@ public class AnalizadorLetras {
                         estado = 1;
                     } else if (numero(letra[j])) {//Numeros Enteros o Decimales
                         estado = 2;
-                    } else if (reservados.getComparacion().containsKey("" + letra[j])) {//Asignacion y Comparacion
+                    } else if (reservados.getComparacion().containsKey("" + letra[j]) || letra[j]=='!' ) {//Asignacion y Comparacion
                         j += comprobarComparacion(letra[j], letra[j + 1], fila, columna, cadena);
                         cadena = "";
                         estado = 0;
@@ -87,8 +88,11 @@ public class AnalizadorLetras {
                         estado = 0;
                     }else if(letra[j]==' '|| letra[j]=='\t' ){
                         estado=0;
+                    }else if(letra[j]==92){
+                        System.out.println("");
                     }else{
                         errores.add(new Errores(errores.size(), columna, fila, "Error de Inicio", cadena));
+                        estado=0;
                     }
                 } else if (estado == 1) {//Identificadores
                     boolean seguir = identificador(letra[j]) == false ? numero(letra[j]) : identificador(letra[j]);//comprueba si es letra numero o guion bajo
@@ -167,7 +171,9 @@ public class AnalizadorLetras {
                 } else if (letra[j] == ' ') {
                     columna++;
                 }
+                System.out.println("columna"+j);
             }
+            System.out.println(i);
         }      
         if (errores.size()>0) {
             return true;
@@ -187,12 +193,8 @@ public class AnalizadorLetras {
     }
 
     private boolean identificador(char letra) {
-        if ((letra < 123 && letra > 96) || (letra < 91 && letra > 64)
-                || (letra == '_')) {
-            return true;
-        } else {
-            return false;
-        }
+        return ((letra < 123 && letra > 96) || (letra < 91 && letra > 64)
+                || (letra == '_')); 
     }
 
     private boolean numero(char letra) {
@@ -249,7 +251,11 @@ public class AnalizadorLetras {
         if (reservados.getComparacion().containsKey(actual + "" + future)) {
             tokenLista(actual + "" + future, fila, columna, reservados.getComparacion().get(actual + "" + future), "Comparacion");
             return 1;
-        } else {
+        } else if(actual==33){
+            char[] fuc={'s','y'};
+            salirError(cadena, "no se reconoce caracter", columna, fila, fuc, fila);
+            return 100;
+        }else {
             tokenLista(cadena, fila, columna, reservados.getComparacion().get("" + actual), "Comparacion");
             return 0;
         }

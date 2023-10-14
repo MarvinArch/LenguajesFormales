@@ -37,7 +37,7 @@ public final class Mapas {
         reservadas= new HashMap<>();
         String[] reservadasLista={"and", "as", "assert", "break", "class", "continue", "def", "del", "elif", "else", "except",
                               "False", "finally", "for", "from", "global", "if", "import", "in", "is", "lambda", "None", "nonlocal", "not", "or", 
-                            "pass", "raise", "return", "True", "try", "while", "with", "yield"};
+                            "pass", "raise", "return", "True", "try", "while", "with", "yield", "not"};
         
         for (int i = 0; i < reservadasLista.length; i++) {
             reservadas.put(reservadasLista[i], "Reservada");

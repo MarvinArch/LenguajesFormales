@@ -5,11 +5,11 @@
 package com.proyecto.analizadorlexico.visual;
 
 import com.proyecto.analizadorlexico.model.Token;
-import com.proyecto.analizadorlexico.others.AnalizadorLetras;
+import com.proyecto.analizadorlexico.others.analizadores.AnalizadorLetras;
 import java.util.List;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
-import com.proyecto.analizadorlexico.others.NumerarLineas;
+import com.proyecto.analizadorlexico.others.analizadores.NumerarLineas;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -13,6 +13,7 @@ public class Token {
     private String patron;
     private String grupo;
     private int posicionReal;
+    private String tipo;
 
     public Token(int columna, int fila, String lexema, String token, String grupo) {
         this.columna = columna;
@@ -104,6 +105,15 @@ public class Token {
     public String getGrupo() {
         return grupo;
     }
+
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }
+
     
     
 }

@@ -1,8 +1,10 @@
-package com.proyecto.analizadorlexico.others;
+package com.proyecto.analizadorlexico.others.analizadores;
 
 import com.proyecto.analizadorlexico.model.Errores;
 import com.proyecto.analizadorlexico.model.Token;
+import com.proyecto.analizadorlexico.others.Mapas;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -75,7 +77,7 @@ public class AnalizadorLetras {
                         j += comprobarComparacion(letra[j], letra[j + 1], fila, columna, cadena);
                         cadena = "";
                         estado = 0;
-                    } else if (letra[j] == 34 || letra[j] == 39) {// comillas
+                    } else if (letra[j] == 34 || letra[j] == 39 || letra[j]=='”') {// comillas
                         tipoComilla=letra[j];
                         estado = 5;
                     } else if (letra[j] == 35) {//comentario
@@ -102,6 +104,7 @@ public class AnalizadorLetras {
                         cadena += letra[j];
                     } else {
                         cadena = tokenLista(cadena, fila, columna, "Identificador", "Identificador");
+                        token.get(token.size()-1).setTipo("String");
                         j--;
                         estado=0;
                         cadena="";
@@ -115,6 +118,7 @@ public class AnalizadorLetras {
                         estado = 3;
                     } else if (letra[j] == ' ') {
                         cadena = tokenLista(cadena.trim(), fila, columna, "Entero", "Constante");
+                        token.get(token.size()-1).setTipo("numero");
                         estado = 0;
                     } else if (reservados.getAritmeticos().containsKey("" + letra[j])) {
                         cadena = tokenLista(cadena.replace(letra[j], ' ').trim(), fila, columna, "Entero", "Constante");
@@ -135,6 +139,7 @@ public class AnalizadorLetras {
                         estado = 3;
                     } else if (letra[j] == ' ') {
                         cadena = tokenLista(cadena.trim(), fila, columna, "Decimal", "Constante");
+                        token.get(token.size()-1).setTipo("numero");
                         estado = 0;
                     } else if (reservados.getAritmeticos().containsKey("" + letra[j])) {
                         cadena = tokenLista(cadena.replace(letra[j], ' ').trim(), fila, columna, "Decimal", "Constante");
@@ -151,8 +156,9 @@ public class AnalizadorLetras {
                     }
                 } else if (estado == 5) {//Comillas cierre
                     cadena += letra[j];
-                    if ((letra[j] == 34 || letra[j] == 39) && tipoComilla==letra[j]) {
+                    if ((letra[j] == 34 || letra[j] == 39 || letra[j]=='”') && tipoComilla==letra[j]) {
                         cadena = tokenLista(cadena, fila, columna, "Cadena", "Constante");
+                        verificarConstante();
                         estado = 0;
                     } else if (j == letra.length - 1) {
                         estado = 0;
@@ -176,6 +182,32 @@ public class AnalizadorLetras {
         return false;
 
     }
+    
+    private void verificarConstante(){
+        int posicion=token.size()-1;
+        int inicio=0;
+        int fin=0;
+        String resto="";
+        int posicionIicial=token.get(posicion).getColumna();
+        if (token.get(posicion-1).getLexema().equals("f")) {
+            char[] constante=token.get(posicion).getLexema().toCharArray();
+            for (int i = 0; i < constante.length; i++) {
+                if (constante[i]=='{') {
+                    tokenLista("{", token.get(posicion).getFila(), posicionIicial+i, reservados.getOtros().get('{'), "Otros");
+                    inicio=i+1;
+                }
+                if (constante[i]=='}') {
+                    tokenLista("}", token.get(posicion).getFila(), posicionIicial+i, reservados.getOtros().get('{'), "Otros");
+                    fin=i-1;
+                }
+            }
+            for (int i = inicio; i <= fin; i++) {
+                resto+=constante[i];
+            }
+        }
+    }
+    
+    
     
     private int salirError(String cadena, String descripcion, int columna, int fila, char[] texto, int index){
         errores.add(new Errores(errores.size()+1, columna+cadena.length()-1, fila, descripcion, cadena));

@@ -6,7 +6,8 @@ package com.proyecto.analizadorlexico.visual;
 
 
 import com.proyecto.analizadorlexico.AnalizadorLexico;
-import com.proyecto.analizadorlexico.others.AnalizadorLetras;
+import com.proyecto.analizadorlexico.others.analizadores.AnalizadorLetras;
+import com.proyecto.analizadorlexico.others.analizadores.AnalizarTokens;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.MouseInfo;
@@ -375,6 +376,8 @@ public class VentanaInicial extends javax.swing.JFrame {
             info.llenartabla(ana.getToken());
             panel.get(tab.getSelectedIndex()).remplaceText2(ana.getToken());//cambia de color el texto
             this.panel.get(tab.getSelectedIndex()).limpiarErrores();
+            AnalizarTokens jjj= new AnalizarTokens(ana.getToken());
+            jjj.Analisis();
         }else{
             buttonInfo.setEnabled(false);
             List<String> lista = new ArrayList<>();

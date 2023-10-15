@@ -29,19 +29,21 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Component id="PanelSuperior" max="32767" attributes="0"/>
           <Group type="102" alignment="0" attributes="0">
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
               <Component id="buttonCargar" min="-2" pref="140" max="-2" attributes="0"/>
-              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
               <Component id="buttonGuardar" min="-2" pref="139" max="-2" attributes="0"/>
-              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
               <Component id="buttonPestaña" min="-2" pref="140" max="-2" attributes="0"/>
-              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
               <Component id="ButtonCerrar" min="-2" max="-2" attributes="0"/>
-              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
               <Component id="buttonAnalizar" min="-2" pref="140" max="-2" attributes="0"/>
-              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
               <Component id="buttonInfo" min="-2" pref="140" max="-2" attributes="0"/>
-              <EmptySpace max="32767" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="jButtoninfoSintactico" min="-2" max="-2" attributes="0"/>
+              <EmptySpace pref="36" max="32767" attributes="0"/>
           </Group>
           <Group type="102" alignment="0" attributes="0">
               <Component id="tab" min="-2" pref="100" max="-2" attributes="0"/>
@@ -59,8 +61,9 @@
                   <Component id="buttonPestaña" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="ButtonCerrar" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="buttonAnalizar" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="buttonInfo" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="buttonGuardar" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="buttonInfo" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jButtoninfoSintactico" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Component id="tab" min="-2" pref="100" max="-2" attributes="0"/>
@@ -85,7 +88,7 @@
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="1" attributes="0">
-                  <EmptySpace pref="481" max="32767" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
                   <Component id="labelTitulo" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="464" max="-2" attributes="0"/>
                   <Component id="labelMini" min="-2" max="-2" attributes="0"/>
@@ -178,11 +181,10 @@
     </Component>
     <Component class="javax.swing.JButton" name="buttonInfo">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Ver Informe"/>
+        <Property name="text" type="java.lang.String" value=" Informe Lexico"/>
       </Properties>
       <Events>
         <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="buttonInfoMouseClicked"/>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buttonInfoActionPerformed"/>
       </Events>
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="buttonInfo.setEnabled(false);"/>
@@ -194,6 +196,14 @@
       </Properties>
       <Events>
         <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="buttonGuardarMouseClicked"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="jButtoninfoSintactico">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Informe Sintactico"/>
+      </Properties>
+      <Events>
+        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jButtoninfoSintacticoMouseClicked"/>
       </Events>
     </Component>
   </SubComponents>

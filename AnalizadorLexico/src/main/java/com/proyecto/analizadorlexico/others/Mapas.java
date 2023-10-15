@@ -16,6 +16,7 @@ public final class Mapas {
     private Map<Character, String> otros;
     private Map<String, String> reservadas; 
     private Map<String, String> comparacion;
+    private Map<String, String> asignacioncorta;
 
     public Mapas() {
         llenarReservadas();
@@ -73,6 +74,14 @@ public final class Mapas {
         comparacion.put(">=", "Mayor o Igual que");
         comparacion.put("<=", "Menor o Igual que");
         comparacion.put("=", "Asignacion");
+        
+        asignacioncorta= new HashMap<>();
+        asignacioncorta.put("+=", "suma Corta");
+        asignacioncorta.put("-=", "resta Corta");
+        asignacioncorta.put("*=", "multiplicacion Corta");
+        asignacioncorta.put("/=", "division Corta");
+        asignacioncorta.put("**=", "potencia Corta");
+        asignacioncorta.put("%=", "residuo Corta");
     }
 
     public Map<String, String> getAritmeticos() {
@@ -89,6 +98,10 @@ public final class Mapas {
 
     public Map<String, String> getComparacion() {
         return comparacion;
+    }
+
+    public Map<String, String> getAsignacioncorta() {
+        return asignacioncorta;
     }
     
     

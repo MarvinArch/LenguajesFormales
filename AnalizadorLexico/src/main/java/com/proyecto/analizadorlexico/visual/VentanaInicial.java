@@ -39,6 +39,8 @@ public class VentanaInicial extends javax.swing.JFrame {
     private List<String> ubicacionesAbiertos;
     private Informe info;
     private ArrayList<PanelPrincipal> panel;
+    private AnalizarTokens sintactic;
+    private InformeSintactico infosintac;
     public VentanaInicial() {
         panel= new ArrayList<>();
         ubicacionesAbiertos= new ArrayList<>();
@@ -50,7 +52,7 @@ public class VentanaInicial extends javax.swing.JFrame {
         String ruta = rutaca.getPath();
         info = new Informe(ruta);
         this.ubicacion = ruta.replace("target/classes/", "");
-         info = new Informe(ubicacion);
+        info = new Informe(ubicacion);
         imagenCierre(ubicacion);
         imagenMini(ubicacion);
         tab.setBounds(3, 100, 1080,700);
@@ -59,6 +61,8 @@ public class VentanaInicial extends javax.swing.JFrame {
         tab.add(panel.get(0));
         tab.setTitleAt(0, "Sin Titulo");
         labelTitulo.setText("Sin Titulo");
+        jButtoninfoSintactico.setEnabled(false);
+        infosintac = new InformeSintactico();
         
     }
     
@@ -104,6 +108,7 @@ public class VentanaInicial extends javax.swing.JFrame {
         buttonAnalizar = new javax.swing.JButton();
         buttonInfo = new javax.swing.JButton();
         buttonGuardar = new javax.swing.JButton();
+        jButtoninfoSintactico = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(153, 153, 153));
@@ -154,7 +159,7 @@ public class VentanaInicial extends javax.swing.JFrame {
         PanelSuperiorLayout.setHorizontalGroup(
             PanelSuperiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PanelSuperiorLayout.createSequentialGroup()
-                .addContainerGap(481, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(labelTitulo)
                 .addGap(464, 464, 464)
                 .addComponent(labelMini)
@@ -207,16 +212,11 @@ public class VentanaInicial extends javax.swing.JFrame {
             }
         });
 
-        buttonInfo.setText("Ver Informe");
+        buttonInfo.setText(" Informe Lexico");
         buttonInfo.setEnabled(false);
         buttonInfo.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 buttonInfoMouseClicked(evt);
-            }
-        });
-        buttonInfo.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonInfoActionPerformed(evt);
             }
         });
 
@@ -227,25 +227,34 @@ public class VentanaInicial extends javax.swing.JFrame {
             }
         });
 
+        jButtoninfoSintactico.setText("Informe Sintactico");
+        jButtoninfoSintactico.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButtoninfoSintacticoMouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(PanelSuperior, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(18, 18, 18)
                 .addComponent(buttonCargar, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(buttonGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(buttonPestaña, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(ButtonCerrar)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(buttonAnalizar, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(buttonInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButtoninfoSintactico)
+                .addContainerGap(36, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addComponent(tab, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
@@ -260,8 +269,9 @@ public class VentanaInicial extends javax.swing.JFrame {
                     .addComponent(buttonPestaña)
                     .addComponent(ButtonCerrar)
                     .addComponent(buttonAnalizar)
+                    .addComponent(buttonGuardar)
                     .addComponent(buttonInfo)
-                    .addComponent(buttonGuardar))
+                    .addComponent(jButtoninfoSintactico))
                 .addGap(18, 18, 18)
                 .addComponent(tab, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 608, Short.MAX_VALUE))
@@ -371,35 +381,40 @@ public class VentanaInicial extends javax.swing.JFrame {
     private void buttonAnalizarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_buttonAnalizarMouseClicked
         AnalizadorLetras ana = new AnalizadorLetras(panel.get(tab.getSelectedIndex()).devolverTexto());
         boolean errores=ana.analizar() ;
-        if (errores==false) {
+        sintactic= new AnalizarTokens(ana.getToken());
+        sintactic.Analisis();
+        if (errores==false && sintactic.getErrores().isEmpty()) {
             buttonInfo.setEnabled(true);
+            jButtoninfoSintactico.setEnabled(true);
             info.llenartabla(ana.getToken());
             panel.get(tab.getSelectedIndex()).remplaceText2(ana.getToken());//cambia de color el texto
-            this.panel.get(tab.getSelectedIndex()).limpiarErrores();
-            AnalizarTokens jjj= new AnalizarTokens(ana.getToken());
-            jjj.Analisis();
+            this.panel.get(tab.getSelectedIndex()).limpiarErrores();            
         }else{
+            System.out.println("se detectaron errores");
             buttonInfo.setEnabled(false);
             List<String> lista = new ArrayList<>();
             int err= ana.getErrores().size();
             for (int i = 0; i < err; i++) {
                 lista.add(ana.getErrores().get(i).toString());
             }
+            for (int i = 0; i < sintactic.getErrores().size(); i++) {
+                sintactic.getErrores().get(i).setNumError(lista.size());
+                lista.add(sintactic.getErrores().get(i).toString());
+            }
             this.panel.get(tab.getSelectedIndex()).cambiarTextoReporte(lista );
         }
     }//GEN-LAST:event_buttonAnalizarMouseClicked
 
     private void buttonInfoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_buttonInfoMouseClicked
-        if(buttonInfo.getText().equals("Ver Informe")){
+        if(buttonInfo.getText().equals(" Informe Lexico")){
             tab.setVisible(false);
-            
             this.add(info);
             info.setVisible(true);
             info.setBounds(2, 100, 1050, 660);
             buttonInfo.setText("Volver Archivo");
             buttonInfo.setBackground(Color.red);
         }else{
-            buttonInfo.setText("Ver Informe");
+            buttonInfo.setText(" Informe Lexico");
             info.setVisible(false);
             tab.setVisible(true);
             buttonInfo.setBackground(buttonAnalizar.getBackground());
@@ -428,9 +443,26 @@ public class VentanaInicial extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_buttonGuardarMouseClicked
 
-    private void buttonInfoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonInfoActionPerformed
+    private void jButtoninfoSintacticoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButtoninfoSintacticoMouseClicked
         // TODO add your handling code here:
-    }//GEN-LAST:event_buttonInfoActionPerformed
+        
+        if(jButtoninfoSintactico.getText().equals("Informe Sintactico")){
+            tab.setVisible(false);
+            this.add(infosintac);
+            infosintac.setVisible(true);
+            infosintac.limpiarTabla();
+            infosintac.llenarTabla(sintactic.getDeclaracionesGlobales());
+            infosintac.setBounds(2, 100, 1050, 660);
+            jButtoninfoSintactico.setText("Volver Archivo");
+            jButtoninfoSintactico.setBackground(Color.red);
+        }else{
+            jButtoninfoSintactico.setText("Informe Sintactico");
+            infosintac.setVisible(false);
+            tab.setVisible(true);
+            jButtoninfoSintactico.setBackground(buttonAnalizar.getBackground());
+            this.remove(infosintac);
+        }
+    }//GEN-LAST:event_jButtoninfoSintacticoMouseClicked
 
     /**
      * @param args the command line arguments
@@ -475,6 +507,7 @@ public class VentanaInicial extends javax.swing.JFrame {
     private javax.swing.JButton buttonGuardar;
     private javax.swing.JButton buttonInfo;
     private javax.swing.JButton buttonPestaña;
+    private javax.swing.JButton jButtoninfoSintactico;
     private javax.swing.JLabel labelCierre;
     private javax.swing.JLabel labelMini;
     private javax.swing.JLabel labelTitulo;

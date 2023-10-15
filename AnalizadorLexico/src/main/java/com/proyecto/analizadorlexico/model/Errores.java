@@ -51,6 +51,10 @@ public class Errores {
     public String toString() {
         return "  Numero de Error=" + numError + ",: \n\tcolumna=" + columna + ", fila=" + fila + ", descripcion=" + descripcion + ", \n\ttoken=" + token + "\n\tSe esperaba";
     }
+
+    public void setNumError(int numError) {
+        this.numError = numError;
+    }
     
     
     

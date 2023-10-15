@@ -36,6 +36,9 @@ public class DevolverValores {
                     if (comprobarMasOperaciones(valorfinal.get(i))) {
                         rp = cantidades(InvertirOperaciones(valorfinal.get(i)));
                         temporal.add(rp);
+                    } else if (comprobarComparacion(valorfinal.get(i))) {
+                        rp = "\""+resultadoComparacion(valorfinal.get(i))+"\"";
+                        temporal.add(rp);
                     } else {
                         temporal.add(valorfinal.get(i));
                     }
@@ -74,9 +77,15 @@ public class DevolverValores {
                 if (i == temporal.size() - 1 && valores) {
                     String compro = "" + valoragre;
                     if (entero(compro)) {
-                        compro = compro.replace(".0", "");
-                        int nuw = Integer.parseInt(compro);
-                        Resultado += "" + nuw;
+                        try {
+                            compro = compro.replace(".0", "");
+                            int nuw = Integer.parseInt(compro);
+                            Resultado += "" + nuw;
+                        } catch (Exception e) {
+                            compro = compro.replace(".0", "");
+                            Resultado += "" + valoragre;
+                        }
+                        
                     } else {
                         Resultado += "" + valoragre;
                     }
@@ -87,7 +96,107 @@ public class DevolverValores {
         return Resultado;
     }
     
+    private static String resultadoComparacion(String val1){
+        Mapas map = new Mapas();
+        List<String> valorfinal;
+        int temp1=-1;
+        int temp2=-1;
+        String response="";
+        if (val1.contains("<=")) {
+            valorfinal=separarComparaciones(val1,"<=");
+            val1= val1.replace("<=", "");
+            try{
+                temp1=Integer.parseInt(valorfinal.get(0));
+                temp2=Integer.parseInt(valorfinal.get(1));
+            }catch(Exception e){}
+            if (temp1<=temp2) {
+                response="True";
+            }else{
+                response="False";
+            }
+        }else if (val1.contains(">=")) {
+            valorfinal=separarComparaciones(val1,">=");
+            val1= val1.replace(">=", "");
+            try{
+                temp1=Integer.parseInt(valorfinal.get(0));
+                temp2=Integer.parseInt(valorfinal.get(1));
+            }catch(Exception e){}
+            if (temp1>=temp2) {
+                response="True";
+            }else{
+                response="False";
+            }
+        } else if (val1.contains("==")) {
+            valorfinal=separarComparaciones(val1,"==");
+            val1= val1.replace("==", "");
+            try{
+                temp1=Integer.parseInt(valorfinal.get(0));
+                temp2=Integer.parseInt(valorfinal.get(1));
+            }catch(Exception e){}
+            if (temp1==temp2) {
+                response="True";
+            }else{
+                response="False";
+            }
+        } else if (val1.contains("!=")) {
+            valorfinal=separarComparaciones(val1,"!=");
+            val1= val1.replace("!=", "");
+            try{
+                temp1=Integer.parseInt(valorfinal.get(0));
+                temp2=Integer.parseInt(valorfinal.get(1));
+            }catch(Exception e){}
+            if (temp1!=temp2) {
+                response="True";
+            }else{
+                response="False";
+            }
+        } else if (val1.contains("<")) {
+            valorfinal=separarComparaciones(val1,"<");
+            val1= val1.replace("<", "");
+            try{
+                temp1=Integer.parseInt(valorfinal.get(0));
+                temp2=Integer.parseInt(valorfinal.get(1));
+            }catch(Exception e){}
+            if (temp1<temp2) {
+                response="True";
+            }else{
+                response="False";
+            }
+        }else if (val1.contains(">")) {
+            valorfinal=separarComparaciones(val1,">");
+            val1= val1.replace(">", "");
+            try{
+                temp1=Integer.parseInt(valorfinal.get(0));
+                temp2=Integer.parseInt(valorfinal.get(1));
+            }catch(Exception e){}
+            if (temp1>temp2) {
+                response="True";
+            }else{
+                response="False";
+            }
+        }
+        return response;
+    }
+    
+    private static List<String> separarComparaciones(String val1, String sepa){
+        List<String> valorfinal = new ArrayList<>();
+        StringTokenizer st = new StringTokenizer(val1, sepa);
+        while (st.hasMoreTokens()) {
+            valorfinal.add(st.nextToken());
+        }
+        return valorfinal;
+    }
+    private static boolean comprobarComparacion(String val1){
+        
+        if (val1.contains("<=")||val1.contains("<=")||val1.contains(">=") || val1.contains("==") || val1.contains("!=") ||
+                val1.contains("<") || val1.contains(">")) {
+            return true;
+        }
+        return false;
+    }
+    
     private static String cantidades(String val1) {
+        System.out.println("recivio"+val1+" en la linea 91"); 
         String resp = "";
         boolean convertido = false;
 
@@ -101,8 +210,7 @@ public class DevolverValores {
             val1 = Resta(val1);
         }
 
-        try {
-            System.out.println("recivio"+val1);    
+        try {   
             resp =""+ Double.parseDouble(val1);
             convertido = true;
             
@@ -340,9 +448,9 @@ public class DevolverValores {
             double resp= Double.parseDouble(ultimo)-Double.parseDouble(primeto);
             String remplaso= ultimo+"-"+primeto;
             val1=val1.replace(remplaso, ""+resp);
-            int oo=0;
+            double oo=0;
             try {
-                oo=Integer.parseInt(val1);
+                oo=Double.parseDouble(val1);
             } catch (Exception e) {
             }
             if (val1.contains("-")&& oo>=0) {
@@ -350,6 +458,13 @@ public class DevolverValores {
             }
         }
         return val1;
+    }
+    public static String voltearArreglo(List<String> inicio){
+        String fin = "";
+        for (int i = inicio.size()-1; i >= 0; i--) {
+            fin+=inicio.get(i);
+        }
+        return fin;
     }
     
 }

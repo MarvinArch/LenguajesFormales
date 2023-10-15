@@ -46,7 +46,7 @@ public class Token {
             this.grupo="Constante";
         }
         if (this.lexema.equals("and") || this.lexema.equals("or") || this.lexema.equals("not")) {
-            this.grupo="Logicos";
+            this.grupo="Constante";
         }
         if (this.token.equals("Asignacion")) {
             this.grupo="Asignacion";
@@ -112,6 +112,14 @@ public class Token {
 
     public void setTipo(String tipo) {
         this.tipo = tipo;
+    }
+
+    public void setLexema(String lexema) {
+        this.lexema = lexema;
+    }
+
+    public void setGrupo(String grupo) {
+        this.grupo = grupo;
     }
 
     

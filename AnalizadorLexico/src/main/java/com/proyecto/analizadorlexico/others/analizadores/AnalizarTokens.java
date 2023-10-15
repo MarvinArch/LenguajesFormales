@@ -5,7 +5,10 @@
 package com.proyecto.analizadorlexico.others.analizadores;
 
 import com.proyecto.analizadorlexico.model.DeclaracionAsignacion;
+import com.proyecto.analizadorlexico.model.Errores;
 import com.proyecto.analizadorlexico.model.Token;
+import com.proyecto.analizadorlexico.model.modelIf;
+import com.proyecto.analizadorlexico.others.AnalizarAsignacionVariables;
 import com.proyecto.analizadorlexico.others.DevolverValores;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,104 +19,84 @@ import java.util.Stack;
  * @author david
  */
 public class AnalizarTokens {
+    private List<Errores> errores;
     private List<Token> arreglo;
-    List<DeclaracionAsignacion> declaraciones;
+    private int posicionActual;
+    List<DeclaracionAsignacion> declaracionesGlobales;
 
     public AnalizarTokens(List<Token> arreglo) {
         this.arreglo = arreglo;
-        declaraciones= new ArrayList<>();
+        declaracionesGlobales= new ArrayList<>();
+        errores= new ArrayList<>();
     }
     
     public void Analisis(){
         int estado =0;
         for (int i = 0; i < arreglo.size(); i++) {
             if (arreglo.get(i).getGrupo().equals("Identificador") && estado==0) {
-                i=declaracion(i, arreglo.get(i));
+                AnalizarAsignacionVariables vari= new AnalizarAsignacionVariables();
+                declaracionesGlobales.add(vari.declaracion(i, arreglo.get(i), arreglo, declaracionesGlobales));
+                declaracionesGlobales.get(declaracionesGlobales.size()-1).setTipo("Declaracion Global");
+                actualizarErrores(vari.getErrores());
+                i=vari.getPosicionActual();
                 i--;
+                estado=0;
+            }else if (arreglo.get(i).getGrupo().equalsIgnoreCase("palabras clave") && estado==0) {
+                if (arreglo.get(i).getLexema().equalsIgnoreCase("if")) {
+                    posicionActual=i;
+                    _ifGlobal();
+                }
             }
             if (i==arreglo.size()-2) {
                 i+=2;
             }
         }
+        imprimirArreglo();
     }
     
-    public int declaracion(int posicion, Token tok){
+    public modelIf _ifGlobal(){
         Stack<Token> pila = new Stack();
-        DeclaracionAsignacion temp = new DeclaracionAsignacion();
-        pila.push(tok);
-        int estado=1;
-        for (int i = posicion+1; i < arreglo.size(); i++) {
-            if (estado==1 && arreglo.get(i).getGrupo().equalsIgnoreCase("asignacion")) {
-                pila.push(arreglo.get(i));
-                estado=2;
-            }else if(estado==2){
-                if (arreglo.get(i).getGrupo().equalsIgnoreCase("Constante")) {
+        pila.push(arreglo.get(posicionActual));
+        posicionActual++;
+        int estado=0;
+        for (int i = posicionActual; i < arreglo.size(); i++) {
+            if (arreglo.get(i).getGrupo().equalsIgnoreCase("Constante")&& estado ==0) {
+                if (arreglo.get(i).getLexema().equals("True")||arreglo.get(i).getLexema().equals("False")) {
                     pila.push(arreglo.get(i));
                     estado=3;
-                }else if (arreglo.get(i).getGrupo().equalsIgnoreCase("Identificador")) {
-                    if (!declaraciones.isEmpty()) {
-                        for (int j = declaraciones.size()-1; j >=0 ; j--) {
-                            if (arreglo.get(i).getLexema().equalsIgnoreCase(declaraciones.get(j).getVariable())) {
-                                Token temp2= new Token(0, 0, declaraciones.get(j).getValor(), "", "");
-                                pila.push(temp2);
-                                estado=3;
-                            }
-                        }
-                    }else{
-                        i--;
-                        estado=50;
-                    }
-                }else if (arreglo.get(i).equals("[")) {//arreglo
-                    estado=4;
+                }else{
+                    estado=1;
                 }
-            }else if(estado==3){
-                if (arreglo.get(i).getFila()>arreglo.get(i-1).getFila()) {
-                    while(!pila.empty()){
-                        Token tokk= pila.pop();
-                        if (tokk.getGrupo().equalsIgnoreCase("asignacion")) {
-                            temp.setVariable(pila.pop().getLexema());
-                        }else{
-                            temp.setValor(temp.getValor()+tokk.getLexema());
-                        }
-                    }
-                    declaraciones.add(temp);
-                    return i;
-                }else if (arreglo.get(i).getGrupo().equalsIgnoreCase("Aritmetico")) {
-                    pila.push(arreglo.get(i));
-                    estado=2;
-                }
-            }else{
-                System.out.println("Error");
-                if (i==arreglo.size()) {
-                    return i;
-                }
-                for (int j = i; j < arreglo.size(); j++) {
-                    if (arreglo.get(j).getFila()>arreglo.get(j-1).getFila()) {
-                        return i;
-                    }
-                }
-                return i;
-            }
-            if (i==arreglo.size()-1) {
-                while(!pila.empty()){
-                        Token tokk= pila.pop();
-                        if (tokk.getGrupo().equalsIgnoreCase("asignacion")) {
-                            temp.setVariable(pila.pop().getLexema());
-                            temp.setReferencias(tokk.getFila());
-                        }else{
-                        temp.setValor(temp.getValor()+tokk.getLexema());
-                        }
-                    }
-                    temp.setValor(DevolverValores.unirValores(temp.getValor()));
-                    declaraciones.add(temp);
-                    System.out.println(declaraciones.get(declaraciones.size()-1));
-                return i;
             }
         }
-        return 0;
+        return null;
     }
     
-    public int arreglos(){
-        return 0;
+    //comparacion
+    public Stack expresion(){
+        Stack<Token> pila = new Stack();
+        
+        return pila;
+    }
+    
+    
+    public void imprimirArreglo(){
+        for (int i = 0; i < declaracionesGlobales.size(); i++) {
+            System.out.println(declaracionesGlobales.get(i).toString());
+        }
+    }
+
+    public List<Errores> getErrores() {
+        return errores;
+    }
+
+    public List<DeclaracionAsignacion> getDeclaracionesGlobales() {
+        return declaracionesGlobales;
+    }
+    
+    private void actualizarErrores(List<Errores> lista){
+        for (int i = 0; i < lista.size(); i++) {
+            errores.add(lista.get(i));
+        }
     }
 }

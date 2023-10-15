@@ -6,6 +6,8 @@ package com.proyecto.analizadorlexico.visual;
 
 import com.proyecto.analizadorlexico.model.DeclaracionAsignacion;
 import java.util.List;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 
 
@@ -49,8 +51,18 @@ public class InformeSintactico extends javax.swing.JPanel {
         jTextField1 = new javax.swing.JTextField();
 
         jButton1.setText("Buscar Variable");
+        jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton1MouseClicked(evt);
+            }
+        });
 
-        jTextField1.setText("jTextField1");
+        jTextField1.setText("Buscar Variable");
+        jTextField1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTextField1MouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -73,6 +85,30 @@ public class InformeSintactico extends javax.swing.JPanel {
                 .addContainerGap(575, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
+        // TODO add your handling code here:
+        if (!jTextField1.getText().equalsIgnoreCase("")) {
+            List<DeclaracionAsignacion> tablaOriginal= info.getTablaOriginal();
+            List<DeclaracionAsignacion> tablafiltrada= tablaOriginal.stream()
+                    .filter(variable->variable.getVariable().contains(jTextField1.getText()))
+                            .toList();
+            if (tablafiltrada.size()>0) {
+                info.ModificarTablaOriginal(tablafiltrada);
+            }else{
+                JOptionPane.showMessageDialog(this, "No existe variables con ese nombre");
+            }
+            
+        }else{
+            info.ModificarTablaOriginal(info.getTablaOriginal());
+        }
+    }//GEN-LAST:event_jButton1MouseClicked
+
+    private void jTextField1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTextField1MouseClicked
+        if (jTextField1.getText().equalsIgnoreCase("Buscar Variable")) {
+            jTextField1.setText("");
+        }
+    }//GEN-LAST:event_jTextField1MouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

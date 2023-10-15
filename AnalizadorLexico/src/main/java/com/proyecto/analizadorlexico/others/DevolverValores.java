@@ -196,7 +196,6 @@ public class DevolverValores {
     }
     
     private static String cantidades(String val1) {
-        System.out.println("recivio"+val1+" en la linea 91"); 
         String resp = "";
         boolean convertido = false;
 

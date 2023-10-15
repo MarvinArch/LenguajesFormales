@@ -51,7 +51,6 @@ public class AnalizarTokens {
                 i+=2;
             }
         }
-        imprimirArreglo();
     }
     
     public modelIf _ifGlobal(){

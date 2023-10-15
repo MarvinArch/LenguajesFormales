@@ -5,6 +5,7 @@
 package com.proyecto.analizadorlexico.visual;
 
 import com.proyecto.analizadorlexico.model.DeclaracionAsignacion;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
 
@@ -14,11 +15,13 @@ import javax.swing.table.DefaultTableModel;
  */
 public class Informe1 extends javax.swing.JPanel {
     DefaultTableModel model = new DefaultTableModel();
+    List<DeclaracionAsignacion> tablaOriginal;
     /**
      * Creates new form Informe1
      */
     public Informe1() {
         initComponents();
+        tablaOriginal = new ArrayList<>();
         model.addColumn("Tipo");
         model.addColumn("Variable");
         model.addColumn("Valor");
@@ -27,6 +30,7 @@ public class Informe1 extends javax.swing.JPanel {
     
     public void llenartabla(List<DeclaracionAsignacion> tabla){
         for (int i = 0; i < tabla.size(); i++) {
+            tablaOriginal.add(tabla.get(i));
             model.addRow(new Object[]{tabla.get(i).getTipo(),
                                        tabla.get(i).getVariable(),
                                        tabla.get(i).getValor(),
@@ -36,9 +40,42 @@ public class Informe1 extends javax.swing.JPanel {
     }
     public void limpiarTabla(){
         int a = model.getRowCount()-1;
+        tablaOriginal.clear();
         for (int i = a; i >= 0; i--) {          
             model.removeRow(i);
         }
+    }
+    
+    public void ModificarTablaOriginal(List<DeclaracionAsignacion> tablafiltrada){
+        System.out.println("El arreglo entrante contiene "+tablafiltrada.size());
+        DefaultTableModel model2 = new DefaultTableModel();
+        model2.addColumn("Tipo");
+        model2.addColumn("Variable");
+        model2.addColumn("Valor");
+        model2.addColumn("Linea");
+        for (int i = 0; i < tablafiltrada.size(); i++) {
+            model2.addRow(new Object[]{tablafiltrada.get(i).getTipo(),
+                                       tablafiltrada.get(i).getVariable(),
+                                       tablafiltrada.get(i).getValor(),
+                                        tablafiltrada.get(i).getReferencias()});
+        }
+        jTable1.setModel(model2);
+    }
+
+    public DefaultTableModel getModel() {
+        return model;
+    }
+
+    public List<DeclaracionAsignacion> getTablaOriginal() {
+        return tablaOriginal;
+    }
+
+    public void setTablaOriginal(List<DeclaracionAsignacion> tablaOriginal) {
+        this.tablaOriginal = tablaOriginal;
+    }
+
+    public void setModel(DefaultTableModel model) {
+        this.model = model;
     }
 
     /**
